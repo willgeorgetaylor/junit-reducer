@@ -16,6 +16,26 @@ For a complete list of arguments:
 $./junit-reducer --help
 ```
 
+```
+Flags:
+  -h, --help                                     help for junit-reducer
+      --input-path string                        Glob pattern for input JUnit XML reports (required) (default "./**/*.xml")
+      --output-path string                       Output path for synthetic JUnit XML reports (required) (default "./output/")
+      --operator-test-cases-time string          Operator for test cases time (default "mean")
+      --operator-test-suites-assertions string   Operator for test suites assertions (default "mean")
+      --operator-test-suites-errors string       Operator for test suites errors (default "mean")
+      --operator-test-suites-failed string       Operator for test suites failed (default "mean")
+      --operator-test-suites-skipped string      Operator for test suites skipped (default "mean")
+      --operator-test-suites-tests string        Operator for test suites tests (default "mean")
+      --operator-test-suites-time string         Operator for test suites time (default "mean")
+      --preserve-errors string                   Preserve errors in output report (default "none")
+      --preserve-failures string                 Preserve failures in output report (default "none")
+      --preserve-skips string                    Preserve skips in output report (default "none")
+      --reduce-test-cases-by string              Reduce test cases by name, classname, or file (default "name")
+      --reduce-test-suites-by string             Reduce test suites by name or filepath (default "name")
+      --rounding-mode string                     Rounding mode for integer counts (failures, errors etc.) that produce non-integer averages (default "round")
+```
+
 ## Examples
 
 ### Basic usage
@@ -32,8 +52,8 @@ junit-reducer \
 junit-reducer \
   --input-path="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --reduce-testsuites-by="name" \     # Grouping test suites by name
-  --reduce-testcases-by="classname"   # Grouping test cases by classname
+  --reduce-test-suites-by="name" \     # Grouping test suites by name
+  --reduce-test-cases-by="classname"   # Grouping test cases by classname
 ```
 
 ### Reduce with non-average operations
@@ -42,13 +62,13 @@ junit-reducer \
 junit-reducer \
   --input-path="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --testsuites-skipped="min" \        # Keeps min of skips across suites of same type
-  --testsuites-failed="min" \         # Keeps min of failures across suites of same type
-  --testsuites-errors="min" \         # Keeps min of errors across suites of same type
-  --testsuites-tests="max" \          # Keeps max of tests across suites of same type
-  --testsuites-assertions="max" \     # Keeps max of assertions across suites of same type
-  --testsuites-time="mean" \          # Calculates mean of time across suites of same type
-  --testcases-time="mean"             # Calculates mean of time across cases of same type
+  --test-suites-skipped="min" \        # Keeps min of skips across suites of same type
+  --test-suites-failed="min" \         # Keeps min of failures across suites of same type
+  --test-suites-errors="min" \         # Keeps min of errors across suites of same type
+  --test-suites-tests="max" \          # Keeps max of tests across suites of same type
+  --test-suites-assertions="max" \     # Keeps max of assertions across suites of same type
+  --test-suites-time="mean" \          # Calculates mean of time across suites of same type
+  --test-cases-time="mean"             # Calculates mean of time across cases of same type
 ```
 
 ### Rounding average counts
@@ -57,7 +77,7 @@ junit-reducer \
 junit-reducer \
   --input-path="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --int-rounding="down"               # Specifies the rounding method
+  --int-rounding="floor"               # Specifies the rounding method
 ```
 
 ### Preserve testcase children
@@ -66,9 +86,7 @@ junit-reducer \
 junit-reducer \
   --input-path="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --preserveErrors="all" \            # Preserve ALL error children nodes (not recommended)
-  --preserveSkips=1 \                 # Preserve 1 skip child node per case of same type
-  --preserveFailures="none"           # Do not preserve failure children nodes
+  --preserve-errors="all" \            # Preserve ALL error children nodes (not recommended)
+  --preserve-skips="1" \               # Preserve 1 skip child node per case of same type
+  --preserve-failures="none"           # Do not preserve failure children nodes
 ```
-
-

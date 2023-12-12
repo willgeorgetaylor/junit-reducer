@@ -1,26 +1,51 @@
+before:
+  hooks:
+    - go mod tidy
+
 builds:
-  - main: ./
+  - <<: &build_defaults
+      binary: bin/name
+      main: ./cmd/name
+    id: macos
+    goos: [darwin]
+    goarch: [amd64]
+  - <<: *build_defaults
+    id: linux
+    goos: [linux]
+    goarch: ["386", arm, amd64, arm64]
     env:
       - CGO_ENABLED=0
-    binary: apirunner
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+  - <<: *build_defaults
+    id: windows
+    goos: [windows]
+    goarch: ["386", amd64, arm64]
+
 archives:
-  - name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
+  - id: nix
+    builds: [macos, linux]
+    <<: &archive_defaults
+      name_template: "name_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    wrap_in_directory: true
+    format: tar.gz
+    files:
+      - LICENSE
+  - id: windows
+    builds: [windows]
+    <<: *archive_defaults
+    wrap_in_directory: false
+    format: zip
+    files:
+      - LICENSE
+
+release:
+  prerelease: auto
+
 checksum:
   name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
 changelog:
   sort: asc
   filters:
