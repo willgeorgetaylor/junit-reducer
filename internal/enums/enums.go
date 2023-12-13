@@ -1,4 +1,4 @@
-package cmd
+package enums
 
 // TestSuiteField
 
@@ -9,12 +9,12 @@ const (
 	TestSuiteFieldFilepath
 )
 
-var testSuiteFieldKeys = map[TestSuiteField]string{
+var TestSuiteFieldKeys = map[TestSuiteField]string{
 	TestSuiteFieldName:     "name",
 	TestSuiteFieldFilepath: "filepath",
 }
 
-var testSuiteFieldValues = map[string]TestSuiteField{
+var TestSuiteFieldValues = map[string]TestSuiteField{
 	"name":     TestSuiteFieldName,
 	"filepath": TestSuiteFieldFilepath,
 }
@@ -29,13 +29,13 @@ const (
 	TestCaseFieldFile
 )
 
-var testCaseFieldKeys = map[TestCaseField]string{
+var TestCaseFieldKeys = map[TestCaseField]string{
 	TestCaseFieldName:      "name",
 	TestCaseFieldClassname: "classname",
 	TestCaseFieldFile:      "file",
 }
 
-var testCaseFieldValues = map[string]TestCaseField{
+var TestCaseFieldValues = map[string]TestCaseField{
 	"name":      TestCaseFieldName,
 	"classname": TestCaseFieldClassname,
 	"file":      TestCaseFieldFile,
@@ -54,7 +54,7 @@ const (
 	AggregateOperationSum
 )
 
-var aggregateOperationKeys = map[AggregateOperation]string{
+var AggregateOperationKeys = map[AggregateOperation]string{
 	AggregateOperationMean:   "mean",
 	AggregateOperationMode:   "mode",
 	AggregateOperationMedian: "median",
@@ -63,7 +63,7 @@ var aggregateOperationKeys = map[AggregateOperation]string{
 	AggregateOperationSum:    "sum",
 }
 
-var aggregateOperationValues = map[string]AggregateOperation{
+var AggregateOperationValues = map[string]AggregateOperation{
 	"mean":   AggregateOperationMean,
 	"mode":   AggregateOperationMode,
 	"median": AggregateOperationMedian,
@@ -82,13 +82,13 @@ const (
 	RoundingModeFloor
 )
 
-var roundingModeKeys = map[RoundingMode]string{
+var RoundingModeKeys = map[RoundingMode]string{
 	RoundingModeRound: "round",
 	RoundingModeCeil:  "ceil",
 	RoundingModeFloor: "floor",
 }
 
-var roundingModeValues = map[string]RoundingMode{
+var RoundingModeValues = map[string]RoundingMode{
 	"round": RoundingModeRound,
 	"ceil":  RoundingModeCeil,
 	"floor": RoundingModeFloor,

@@ -8,6 +8,8 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/willgeorgetaylor/junit-reducer/internal/enums"
+
 	"github.com/spf13/cobra"
 )
 
@@ -49,61 +51,61 @@ var rootCmd = &cobra.Command{
 	Short: "Aggregates and optimizes JUnit reports for CI",
 	Long:  `JUnit Reducer streamlines CI testing by averaging JUnit reports for balanced test runner distribution.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		reduceTestSuitesBy, ok := testSuiteFieldValues[reduceTestSuitesByString]
+		reduceTestSuitesBy, ok := enums.TestSuiteFieldValues[reduceTestSuitesByString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("reduce-test-suites-by-string", reduceTestSuitesByString, []string{"name", "filepath"}))
 			return
 		}
 
-		reduceTestCasesBy, ok := testCaseFieldValues[reduceTestCasesByString]
+		reduceTestCasesBy, ok := enums.TestCaseFieldValues[reduceTestCasesByString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("reduce-test-cases-by-string", reduceTestCasesByString, []string{"name", "classname", "file"}))
 			return
 		}
 
-		operatorTestSuitesSkipped, ok := aggregateOperationValues[operatorTestSuitesSkippedString]
+		operatorTestSuitesSkipped, ok := enums.AggregateOperationValues[operatorTestSuitesSkippedString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-skipped-string", operatorTestSuitesSkippedString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestSuitesFailed, ok := aggregateOperationValues[operatorTestSuitesFailedString]
+		operatorTestSuitesFailed, ok := enums.AggregateOperationValues[operatorTestSuitesFailedString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-failed-string", operatorTestSuitesFailedString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestSuitesErrors, ok := aggregateOperationValues[operatorTestSuitesErrorsString]
+		operatorTestSuitesErrors, ok := enums.AggregateOperationValues[operatorTestSuitesErrorsString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-errors-string", operatorTestSuitesErrorsString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestSuitesTests, ok := aggregateOperationValues[operatorTestSuitesTestsString]
+		operatorTestSuitesTests, ok := enums.AggregateOperationValues[operatorTestSuitesTestsString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-tests-string", operatorTestSuitesTestsString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestSuitesAssertions, ok := aggregateOperationValues[operatorTestSuitesAssertionsString]
+		operatorTestSuitesAssertions, ok := enums.AggregateOperationValues[operatorTestSuitesAssertionsString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-assertions-string", operatorTestSuitesAssertionsString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestSuitesTime, ok := aggregateOperationValues[operatorTestSuitesTimeString]
+		operatorTestSuitesTime, ok := enums.AggregateOperationValues[operatorTestSuitesTimeString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-suites-time-string", operatorTestSuitesTimeString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		operatorTestCasesTime, ok := aggregateOperationValues[operatorTestCasesTimeString]
+		operatorTestCasesTime, ok := enums.AggregateOperationValues[operatorTestCasesTimeString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("operator-test-cases-time-string", operatorTestCasesTimeString, []string{"mean", "mode", "median", "min", "max", "sum"}))
 			return
 		}
 
-		roundingMode, ok := roundingModeValues[roundingModeString]
+		roundingMode, ok := enums.RoundingModeValues[roundingModeString]
 		if !ok {
 			fmt.Println(invalidSelectionMessage("rounding-mode-string", roundingModeString, []string{"round", "ceil", "floor"}))
 			return
@@ -160,16 +162,16 @@ func init() {
 	rootCmd.MarkFlagRequired("input-path")
 	rootCmd.Flags().StringVar(&outputPath, "output-path", "./output/", "Output path for synthetic JUnit XML reports (required)")
 	rootCmd.MarkFlagRequired("output-path")
-	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-test-suites-by", testSuiteFieldKeys[TestSuiteFieldName], "Reduce test suites by name or filepath")
-	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-test-cases-by", testCaseFieldKeys[TestCaseFieldName], "Reduce test cases by name, classname, or file")
-	rootCmd.Flags().StringVar(&operatorTestSuitesSkippedString, "operator-test-suites-skipped", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites skipped")
-	rootCmd.Flags().StringVar(&operatorTestSuitesFailedString, "operator-test-suites-failed", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites failed")
-	rootCmd.Flags().StringVar(&operatorTestSuitesErrorsString, "operator-test-suites-errors", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites errors")
-	rootCmd.Flags().StringVar(&operatorTestSuitesTestsString, "operator-test-suites-tests", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites tests")
-	rootCmd.Flags().StringVar(&operatorTestSuitesAssertionsString, "operator-test-suites-assertions", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites assertions")
-	rootCmd.Flags().StringVar(&operatorTestSuitesTimeString, "operator-test-suites-time", aggregateOperationKeys[AggregateOperationMean], "Operator for test suites time")
-	rootCmd.Flags().StringVar(&operatorTestCasesTimeString, "operator-test-cases-time", aggregateOperationKeys[AggregateOperationMean], "Operator for test cases time")
-	rootCmd.Flags().StringVar(&roundingModeString, "rounding-mode", roundingModeKeys[RoundingModeRound], "Rounding mode for integer counts (failures, errors etc.) that produce non-integer averages")
+	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-test-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldName], "Reduce test suites by name or filepath")
+	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-test-cases-by", enums.TestCaseFieldKeys[enums.TestCaseFieldName], "Reduce test cases by name, classname, or file")
+	rootCmd.Flags().StringVar(&operatorTestSuitesSkippedString, "operator-test-suites-skipped", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites skipped")
+	rootCmd.Flags().StringVar(&operatorTestSuitesFailedString, "operator-test-suites-failed", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites failed")
+	rootCmd.Flags().StringVar(&operatorTestSuitesErrorsString, "operator-test-suites-errors", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites errors")
+	rootCmd.Flags().StringVar(&operatorTestSuitesTestsString, "operator-test-suites-tests", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites tests")
+	rootCmd.Flags().StringVar(&operatorTestSuitesAssertionsString, "operator-test-suites-assertions", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites assertions")
+	rootCmd.Flags().StringVar(&operatorTestSuitesTimeString, "operator-test-suites-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites time")
+	rootCmd.Flags().StringVar(&operatorTestCasesTimeString, "operator-test-cases-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test cases time")
+	rootCmd.Flags().StringVar(&roundingModeString, "rounding-mode", enums.RoundingModeKeys[enums.RoundingModeRound], "Rounding mode for integer counts (failures, errors etc.) that produce non-integer averages")
 	rootCmd.Flags().StringVar(&preserveErrors, "preserve-errors", "none", "Preserve errors in output report")
 	rootCmd.Flags().StringVar(&preserveSkips, "preserve-skips", "none", "Preserve skips in output report")
 	rootCmd.Flags().StringVar(&preserveFailures, "preserve-failures", "none", "Preserve failures in output report")
