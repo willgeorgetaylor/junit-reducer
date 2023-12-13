@@ -1,6 +1,6 @@
 ## junit-reducer
 
-JUnit Reducer is a CLI tool that aggregates multiple [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) into a single, averaged XML report. This helps you run faster continuous integration (CI) parallel tests by reducing data volume and normalizing test execution times.
+JUnit Reducer is a CLI tool that aggregates multiple sets of [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) into a single, averaged XML report set. This helps you run faster continuous integration (CI) parallel tests by reducing data volume and normalizing test execution times.
 
 ## Use case
 
