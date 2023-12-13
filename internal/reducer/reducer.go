@@ -80,7 +80,14 @@ func Reduce(
 		testSuites = append(testSuites, testSuiteSlice...)
 	}
 
-	serialization.Serialize("./output", testSuites)
+	// Create output directory if it doesn't exist
+	err = os.MkdirAll(outputPath, os.ModePerm)
+	if err != nil {
+		helpers.FatalMsg("failed to create output directory: %v", err)
+		os.Exit(1)
+	}
+
+	serialization.Serialize(outputPath, testSuites)
 }
 
 func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite) []serialization.TestSuite {
