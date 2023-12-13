@@ -9,13 +9,15 @@ import (
 	"regexp"
 
 	"github.com/willgeorgetaylor/junit-reducer/internal/enums"
+	"github.com/willgeorgetaylor/junit-reducer/internal/reducer"
 
 	"github.com/spf13/cobra"
 )
 
 var (
 	// Used for flags.
-	inputPath                          string
+	include                            string
+	exclude                            string
 	outputPath                         string
 	reduceTestSuitesByString           string
 	reduceTestCasesByString            string
@@ -129,22 +131,21 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		fmt.Println("junit-reducer")
-		fmt.Println("Input path:", inputPath)
-		fmt.Println("Output path:", outputPath)
-		fmt.Println("Reduce test suites by:", reduceTestSuitesBy)
-		fmt.Println("Reduce test cases by:", reduceTestCasesBy)
-		fmt.Println("Operator test suites skipped:", operatorTestSuitesSkipped)
-		fmt.Println("Operator test suites failed:", operatorTestSuitesFailed)
-		fmt.Println("Operator test suites errors:", operatorTestSuitesErrors)
-		fmt.Println("Operator test suites tests:", operatorTestSuitesTests)
-		fmt.Println("Operator test suites assertions:", operatorTestSuitesAssertions)
-		fmt.Println("Operator test suites time:", operatorTestSuitesTime)
-		fmt.Println("Operator test cases time:", operatorTestCasesTime)
-		fmt.Println("Rounding mode:", roundingMode)
-		fmt.Println("Preserve errors:", preserveErrors)
-		fmt.Println("Preserve skips:", preserveSkips)
-		fmt.Println("Preserve failures:", preserveFailures)
+		reducer.Reduce(
+			include,
+			exclude,
+			outputPath,
+			reduceTestSuitesBy,
+			reduceTestCasesBy,
+			operatorTestSuitesTests,
+			operatorTestSuitesFailed,
+			operatorTestSuitesErrors,
+			operatorTestSuitesSkipped,
+			operatorTestSuitesAssertions,
+			operatorTestSuitesTime,
+			operatorTestCasesTime,
+			roundingMode,
+		)
 	},
 }
 
@@ -158,10 +159,11 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVar(&inputPath, "input-path", "./**/*.xml", "Glob pattern for input JUnit XML reports (required)")
-	rootCmd.MarkFlagRequired("input-path")
+	rootCmd.Flags().StringVar(&include, "include", "./**/*.xml", "Pattern to find input JUnit XML reports (required)")
+	rootCmd.MarkFlagRequired("include")
 	rootCmd.Flags().StringVar(&outputPath, "output-path", "./output/", "Output path for synthetic JUnit XML reports (required)")
 	rootCmd.MarkFlagRequired("output-path")
+	rootCmd.Flags().StringVar(&exclude, "exclude", "", "Pattern to exclude from input JUnit XML reports")
 	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-test-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldName], "Reduce test suites by name or filepath")
 	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-test-cases-by", enums.TestCaseFieldKeys[enums.TestCaseFieldName], "Reduce test cases by name, classname, or file")
 	rootCmd.Flags().StringVar(&operatorTestSuitesSkippedString, "operator-test-suites-skipped", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites skipped")
