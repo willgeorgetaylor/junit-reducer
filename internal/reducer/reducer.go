@@ -9,23 +9,25 @@ import (
 	"github.com/willgeorgetaylor/junit-reducer/internal/serialization"
 )
 
-func Reduce(
-	includeFilePattern string,
-	excludeFilePattern string,
-	outputPath string,
-	reduceTestSuitesBy enums.TestSuiteField,
-	reduceTestCasesBy enums.TestCaseField,
-	operatorTestSuitesTests enums.AggregateOperation,
-	operatorTestSuitesFailed enums.AggregateOperation,
-	operatorTestSuitesErrors enums.AggregateOperation,
-	operatorTestSuitesSkipped enums.AggregateOperation,
-	operatorTestSuitesAssertions enums.AggregateOperation,
-	operatorTestSuitesTime enums.AggregateOperation,
-	operatorTestCasesTime enums.AggregateOperation,
-	roundingMode enums.RoundingMode,
-) {
+type ReduceFunctionParams struct {
+	IncludeFilePattern           string
+	ExcludeFilePattern           string
+	OutputPath                   string
+	ReduceTestSuitesBy           enums.TestSuiteField
+	ReduceTestCasesBy            enums.TestCaseField
+	OperatorTestSuitesTests      enums.AggregateOperation
+	OperatorTestSuitesFailed     enums.AggregateOperation
+	OperatorTestSuitesErrors     enums.AggregateOperation
+	OperatorTestSuitesSkipped    enums.AggregateOperation
+	OperatorTestSuitesAssertions enums.AggregateOperation
+	OperatorTestSuitesTime       enums.AggregateOperation
+	OperatorTestCasesTime        enums.AggregateOperation
+	RoundingMode                 enums.RoundingMode
+}
+
+func Reduce(params ReduceFunctionParams) {
 	files := make(map[string]bool)
-	includedReports, err := doublestar.Glob(includeFilePattern)
+	includedReports, err := doublestar.Glob(params.IncludeFilePattern)
 
 	if err != nil {
 		helpers.FatalMsg("failed to enumerate included JUnit XML reports in: %v", err)
@@ -36,8 +38,8 @@ func Reduce(
 	}
 
 	// Exclude files (optional)
-	if excludeFilePattern != "" {
-		excludedFiles, err := doublestar.Glob(excludeFilePattern)
+	if params.ExcludeFilePattern != "" {
+		excludedFiles, err := doublestar.Glob(params.ExcludeFilePattern)
 
 		if err != nil {
 			helpers.FatalMsg("failed to enumerate excluded JUnit XML reports in: %v", err)
@@ -55,8 +57,16 @@ func Reduce(
 		filesSlice = append(filesSlice, file)
 	}
 
+	// Order alphabetically
+	helpers.SortStrings(filesSlice)
+
 	// Deserialize
-	testSuites := serialization.Deserialize(filesSlice)
+	testSuites, err := serialization.Deserialize(filesSlice)
+
+	if err != nil {
+		helpers.FatalMsg("failed to deserialize JUnit XML reports: %v", err)
+		os.Exit(1)
+	}
 
 	// For now, just reduce testsuites by filepath, and average time values
 	// TODO: Add support for other flags (reduceTestCasesBy, operatorTestSuitesTests, etc.)
@@ -81,13 +91,13 @@ func Reduce(
 	}
 
 	// Create output directory if it doesn't exist
-	err = os.MkdirAll(outputPath, os.ModePerm)
+	err = os.MkdirAll(params.OutputPath, os.ModePerm)
 	if err != nil {
 		helpers.FatalMsg("failed to create output directory: %v", err)
 		os.Exit(1)
 	}
 
-	serialization.Serialize(outputPath, testSuites)
+	serialization.Serialize(params.OutputPath, testSuites)
 }
 
 func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite) []serialization.TestSuite {

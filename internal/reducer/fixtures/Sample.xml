@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" filepath="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb" skipped="0" failures="0" errors="0" tests="7" assertions="20" time="29.099594811999992">
+    <testcase name="test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select" lineno="90" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="0" time="10.373165432000008" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role" lineno="176" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="2" time="2.697016684999994" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_not_see_Creative_Services_Inc_integration_when_removed" lineno="53" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="1" time="1.1485544199999822" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_be_able_to_send_someone_a_background_check_for_an_anonymized_role" lineno="125" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="6" time="4.528742424000001" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_not_be_able_to_start_background_checks_without_background_check_creator_role" lineno="154" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="2" time="4.065885309999999" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_be_able_to_make_a_request_for_Creative_Services_Inc" lineno="60" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="8" time="3.7667863030000035" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+    <testcase name="test_should_see_Creative_Services_Inc_integration_enabled_and_then_removed_when_disabled" lineno="47" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="1" time="2.5194442380000055" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    </testcase>
+  </testsuite>
+</testsuites>

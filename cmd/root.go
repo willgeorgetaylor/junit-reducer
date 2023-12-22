@@ -6,7 +6,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"regexp"
 
 	"github.com/willgeorgetaylor/junit-reducer/internal/enums"
 	"github.com/willgeorgetaylor/junit-reducer/internal/reducer"
@@ -29,22 +28,10 @@ var (
 	operatorTestSuitesTimeString       string
 	operatorTestCasesTimeString        string
 	roundingModeString                 string
-	preserveErrors                     string
-	preserveSkips                      string
-	preserveFailures                   string
 )
 
 func invalidSelectionMessage(field string, selection string, options []string) string {
 	return fmt.Sprintf("Invalid selection '%s' for %s. Valid options are: %v", selection, field, options)
-}
-
-func validatePreserveFlag(flag string) (string, bool) {
-	numberRegex := regexp.MustCompile(`^\d+$`)
-	if flag == "none" || flag == "all" || numberRegex.MatchString(flag) {
-		return flag, true
-	} else {
-		return "", false
-	}
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -113,38 +100,22 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		preserveErrors, ok := validatePreserveFlag(preserveErrors)
-		if !ok {
-			fmt.Println(invalidSelectionMessage("preserve-errors", preserveErrors, []string{"none", "all", "<number>"}))
-			return
-		}
-
-		preserveSkips, ok := validatePreserveFlag(preserveSkips)
-		if !ok {
-			fmt.Println(invalidSelectionMessage("preserve-skips", preserveSkips, []string{"none", "all", "<number>"}))
-			return
-		}
-
-		preserveFailures, ok := validatePreserveFlag(preserveFailures)
-		if !ok {
-			fmt.Println(invalidSelectionMessage("preserve-failures", preserveFailures, []string{"none", "all", "<number>"}))
-			return
-		}
-
 		reducer.Reduce(
-			include,
-			exclude,
-			outputPath,
-			reduceTestSuitesBy,
-			reduceTestCasesBy,
-			operatorTestSuitesTests,
-			operatorTestSuitesFailed,
-			operatorTestSuitesErrors,
-			operatorTestSuitesSkipped,
-			operatorTestSuitesAssertions,
-			operatorTestSuitesTime,
-			operatorTestCasesTime,
-			roundingMode,
+			reducer.ReduceFunctionParams{
+				IncludeFilePattern:           include,
+				ExcludeFilePattern:           exclude,
+				OutputPath:                   outputPath,
+				ReduceTestSuitesBy:           reduceTestSuitesBy,
+				ReduceTestCasesBy:            reduceTestCasesBy,
+				OperatorTestSuitesTests:      operatorTestSuitesTests,
+				OperatorTestSuitesFailed:     operatorTestSuitesFailed,
+				OperatorTestSuitesErrors:     operatorTestSuitesErrors,
+				OperatorTestSuitesSkipped:    operatorTestSuitesSkipped,
+				OperatorTestSuitesAssertions: operatorTestSuitesAssertions,
+				OperatorTestSuitesTime:       operatorTestSuitesTime,
+				OperatorTestCasesTime:        operatorTestCasesTime,
+				RoundingMode:                 roundingMode,
+			},
 		)
 	},
 }
@@ -174,7 +145,4 @@ func init() {
 	rootCmd.Flags().StringVar(&operatorTestSuitesTimeString, "operator-test-suites-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites time")
 	rootCmd.Flags().StringVar(&operatorTestCasesTimeString, "operator-test-cases-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test cases time")
 	rootCmd.Flags().StringVar(&roundingModeString, "rounding-mode", enums.RoundingModeKeys[enums.RoundingModeRound], "Rounding mode for integer counts (failures, errors etc.) that produce non-integer averages")
-	rootCmd.Flags().StringVar(&preserveErrors, "preserve-errors", "none", "Preserve errors in output report")
-	rootCmd.Flags().StringVar(&preserveSkips, "preserve-skips", "none", "Preserve skips in output report")
-	rootCmd.Flags().StringVar(&preserveFailures, "preserve-failures", "none", "Preserve failures in output report")
 }

@@ -39,48 +39,59 @@ type TestCase struct {
 	Time float64 `xml:"time,attr"`
 }
 
-func unmarshalTestSuites(xmlData []byte, fileName string) *TestSuites {
+func UnmarshalTestSuites(xmlData []byte, fileName string) (*TestSuites, error) {
 	var testSuites TestSuites
 	err := xml.Unmarshal(xmlData, &testSuites)
 	if err != nil {
-		helpers.FatalMsg("failed to unmarshal junit xml: %v\n", err)
+		return nil, err
 	}
 	for i := range testSuites.TestSuites {
 		testSuites.TestSuites[i].FileName = fileName
 	}
-	return &testSuites
+	return &testSuites, nil
 }
 
-func deserializeFromReader(
+func DeserializeFromReader(
 	testSuites []TestSuite,
 	reader io.Reader,
 	fileName string,
-) []TestSuite {
+) ([]TestSuite, error) {
 	xmlData, err := io.ReadAll(reader)
 	if err != nil {
 		helpers.FatalMsg("failed to read junit xml: %v\n", err)
+		return nil, err
 	}
-	xmlTestSuites := unmarshalTestSuites(xmlData, fileName)
+	xmlTestSuites, err := UnmarshalTestSuites(xmlData, fileName)
+	if err != nil {
+		helpers.FatalMsg("failed to parse junit xml: %v\n", err)
+		return nil, err
+	}
 	testSuites = append(testSuites, xmlTestSuites.TestSuites...)
-	return testSuites
+	return testSuites, nil
 }
 
 func Deserialize(
 	junitFilePaths []string,
-) []TestSuite {
+) ([]TestSuite, error) {
 	var testSuites []TestSuite
 	for _, junitFilePath := range junitFilePaths {
 		file, err := os.Open(junitFilePath)
 		fileName := filepath.Base(junitFilePath)
-
 		if err != nil {
 			helpers.FatalMsg("failed to open junit xml: %v\n", err)
+			return nil, err
 		}
+
 		helpers.PrintMsg("deserializing junit xml: %v\n", junitFilePath)
-		testSuites = deserializeFromReader(testSuites, file, fileName)
+
+		testSuites, err = DeserializeFromReader(testSuites, file, fileName)
 		file.Close()
+		if err != nil {
+			helpers.FatalMsg("failed to deserialize junit xml: %v\n", err)
+			return nil, err
+		}
 	}
-	return testSuites
+	return testSuites, nil
 }
 
 func Serialize(outputPath string, testSuites []TestSuite) {
