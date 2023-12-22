@@ -24,9 +24,9 @@ func tearDown() {
 
 func assertTestFile(t *testing.T, testFile serialization.TestSuites) {
 	junitReportFileName := testFile.TestSuites[0].FileName
-	outputFileName := "./output/" + junitReportFileName
+	outputFileName := "output/" + junitReportFileName
 
-	if !helpers.DirExists("./output") {
+	if !helpers.DirExists("output") {
 		t.Errorf("expected 'output' directory to exist")
 	}
 
