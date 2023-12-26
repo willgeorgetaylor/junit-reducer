@@ -100,7 +100,7 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		reducer.Reduce(
+		err := reducer.Reduce(
 			reducer.ReduceFunctionParams{
 				IncludeFilePattern:           include,
 				ExcludeFilePattern:           exclude,
@@ -117,6 +117,11 @@ var rootCmd = &cobra.Command{
 				RoundingMode:                 roundingMode,
 			},
 		)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	},
 }
 
