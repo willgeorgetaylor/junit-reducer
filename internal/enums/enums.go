@@ -7,16 +7,19 @@ type TestSuiteField int
 const (
 	TestSuiteFieldName TestSuiteField = iota
 	TestSuiteFieldFilepath
+	TestSuiteFieldNameFilepath
 )
 
 var TestSuiteFieldKeys = map[TestSuiteField]string{
-	TestSuiteFieldName:     "name",
-	TestSuiteFieldFilepath: "filepath",
+	TestSuiteFieldName:         "name",
+	TestSuiteFieldFilepath:     "filepath",
+	TestSuiteFieldNameFilepath: "name+filepath",
 }
 
 var TestSuiteFieldValues = map[string]TestSuiteField{
-	"name":     TestSuiteFieldName,
-	"filepath": TestSuiteFieldFilepath,
+	"name":          TestSuiteFieldName,
+	"filepath":      TestSuiteFieldFilepath,
+	"name+filepath": TestSuiteFieldNameFilepath,
 }
 
 // TestCaseField

@@ -108,7 +108,7 @@ func TestBasicReduce(t *testing.T) {
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldName,
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
 		ReduceTestCasesBy:            enums.TestCaseFieldName,
 		OperatorTestSuitesTests:      enums.AggregateOperationMean,
 		OperatorTestSuitesFailed:     enums.AggregateOperationMean,

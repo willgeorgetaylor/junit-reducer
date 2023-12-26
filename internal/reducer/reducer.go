@@ -74,9 +74,13 @@ func Reduce(params ReduceFunctionParams) {
 	testSuiteMap := make(map[string][]serialization.TestSuite)
 
 	for _, testSuite := range testSuites {
-		// Key off both file and name
-		combinedKey := testSuite.File + ":" + testSuite.Name
-		testSuiteMap[combinedKey] = append(testSuiteMap[combinedKey], testSuite)
+		suiteKey := testSuite.Name
+		if params.ReduceTestSuitesBy == enums.TestSuiteFieldNameFilepath {
+			suiteKey = testSuite.File + ":" + testSuite.Name
+		} else if params.ReduceTestSuitesBy == enums.TestSuiteFieldFilepath {
+			suiteKey = testSuite.File
+		}
+		testSuiteMap[suiteKey] = append(testSuiteMap[suiteKey], testSuite)
 	}
 
 	// Reduce times and other aggregate fields
