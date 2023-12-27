@@ -147,6 +147,7 @@ func Execute() {
 	}
 }
 
+//nolint:errcheck // Ignore errors from MarkFlagRequired
 func init() {
 	rootCmd.Flags().StringVar(&include, "include", "./**/*.xml", "Pattern to find input JUnit XML reports (required)")
 	rootCmd.MarkFlagRequired("include")

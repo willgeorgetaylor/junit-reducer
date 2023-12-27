@@ -126,7 +126,7 @@ func TestBasicReduce(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -186,13 +186,17 @@ func TestBasicReduce(t *testing.T) {
 			},
 		},
 	)
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 }
 
 func TestExcludeFilePattern(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "fixtures/Sample.xml",
 		OutputPath:                   "output/",
@@ -207,6 +211,10 @@ func TestExcludeFilePattern(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -258,7 +266,7 @@ func TestReduceTestSuitesByFilepath(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -273,6 +281,10 @@ func TestReduceTestSuitesByFilepath(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -324,7 +336,7 @@ func TestReduceTestCasesByClassName(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -339,6 +351,10 @@ func TestReduceTestCasesByClassName(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -374,7 +390,7 @@ func TestReduceTestCasesByFilename(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -389,6 +405,10 @@ func TestReduceTestCasesByFilename(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -424,7 +444,7 @@ func TestMaxAggOperation(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -439,6 +459,10 @@ func TestMaxAggOperation(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMax,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -490,7 +514,7 @@ func TestMinAggOperation(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -505,6 +529,10 @@ func TestMinAggOperation(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMin,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -556,7 +584,7 @@ func TestSumAggOperation(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -571,6 +599,10 @@ func TestSumAggOperation(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationSum,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -622,7 +654,7 @@ func TestMedianAggOperation(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -637,6 +669,10 @@ func TestMedianAggOperation(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMedian,
 		RoundingMode:                 enums.RoundingModeRound,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -672,7 +708,7 @@ func TestRoundingModeCeil(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -687,6 +723,10 @@ func TestRoundingModeCeil(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeCeil,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
@@ -738,7 +778,7 @@ func TestRoundingModeFloor(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	Reduce(ReduceFunctionParams{
+	err := Reduce(ReduceFunctionParams{
 		IncludeFilePattern:           "fixtures/*.xml",
 		ExcludeFilePattern:           "",
 		OutputPath:                   "output/",
@@ -753,6 +793,10 @@ func TestRoundingModeFloor(t *testing.T) {
 		OperatorTestCasesTime:        enums.AggregateOperationMean,
 		RoundingMode:                 enums.RoundingModeFloor,
 	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
 
 	assertTestFile(
 		t,
