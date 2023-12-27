@@ -1,4 +1,5 @@
 ![GitHub CI](https://github.com/willgeorgetaylor/junit-reducer/actions/workflows/test.yml/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/willgeorgetaylor/junit-reducer)](https://goreportcard.com/report/github.com/willgeorgetaylor/junit-reducer)
 
 ## junit-reducer
 
