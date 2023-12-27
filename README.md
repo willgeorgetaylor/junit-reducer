@@ -40,7 +40,7 @@ Flags:
 
 ```bash
 junit-reducer \
-  --input-path="test-reports/**/*" \  # Input path for JUnit reports
+  --include="test-reports/**/*" \  # Input path for JUnit reports
   --output-path="avg-reports/"        # Output path for averaged reports
 ```
 
@@ -48,7 +48,7 @@ junit-reducer \
 
 ```bash
 junit-reducer \
-  --input-path="test-reports/**/*" \
+  --include="test-reports/**/*" \
   --output-path="avg-reports/" \
   --reduce-suites-by="name" \         # Grouping test suites by name
   --reduce-cases-by="classname"       # Grouping test cases by classname
@@ -58,7 +58,7 @@ junit-reducer \
 
 ```bash
 junit-reducer \
-  --input-path="test-reports/**/*" \
+  --include="test-reports/**/*" \
   --output-path="avg-reports/" \
   --op-suites-skipped="min" \         # Keeps min of skips across suites of same type
   --op-suites-failed="min" \          # Keeps min of failures across suites of same type
@@ -73,7 +73,7 @@ junit-reducer \
 
 ```bash
 junit-reducer \
-  --input-path="test-reports/**/*" \
+  --include="test-reports/**/*" \
   --output-path="avg-reports/" \
   --rounding-mode="floor"             # Specifies the rounding method
 ```
