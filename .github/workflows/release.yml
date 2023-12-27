@@ -1,4 +1,4 @@
-name: Release JUnit Reducer
+name: release
 
 on:
   push:
