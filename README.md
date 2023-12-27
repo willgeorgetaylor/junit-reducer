@@ -19,8 +19,9 @@ $./junit-reducer --help
 ```
 Flags:
   -h, --help                          help for junit-reducer
-      --input-path string             Glob pattern for input JUnit XML reports (required) (default "./**/*.xml")
+      --include string                Pattern to find input JUnit XML reports (required) (default "./**/*.xml")
       --output-path string            Output path for synthetic JUnit XML reports (required) (default "./output/")
+      --exclude string                Pattern to exclude from input JUnit XML reports
       --op-cases-time string          Operation for test case time values (default: "mean", options: "mean", "min", "max", "mode", "sum")
       --op-suites-assertions string   Operation for test suite assertion count (default: "mean", options: "mean", "min", "max", "mode", "sum")
       --op-suites-errors string       Operation for test suite error count (default: "mean", options: "mean", "min", "max", "mode", "sum")
