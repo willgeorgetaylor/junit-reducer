@@ -52,7 +52,7 @@ const (
 	AggregateOperationMean AggregateOperation = iota
 	AggregateOperationMode
 	AggregateOperationMedian
-	AgregateOperationMin
+	AggregateOperationMin
 	AggregateOperationMax
 	AggregateOperationSum
 )
@@ -61,7 +61,7 @@ var AggregateOperationKeys = map[AggregateOperation]string{
 	AggregateOperationMean:   "mean",
 	AggregateOperationMode:   "mode",
 	AggregateOperationMedian: "median",
-	AgregateOperationMin:     "min",
+	AggregateOperationMin:    "min",
 	AggregateOperationMax:    "max",
 	AggregateOperationSum:    "sum",
 }
@@ -70,7 +70,7 @@ var AggregateOperationValues = map[string]AggregateOperation{
 	"mean":   AggregateOperationMean,
 	"mode":   AggregateOperationMode,
 	"median": AggregateOperationMedian,
-	"min":    AgregateOperationMin,
+	"min":    AggregateOperationMin,
 	"max":    AggregateOperationMax,
 	"sum":    AggregateOperationSum,
 }

@@ -9,7 +9,7 @@ func TestAggregateOperationValues(t *testing.T) {
 		"mean":   AggregateOperationMean,
 		"mode":   AggregateOperationMode,
 		"median": AggregateOperationMedian,
-		"min":    AgregateOperationMin,
+		"min":    AggregateOperationMin,
 		"max":    AggregateOperationMax,
 		"sum":    AggregateOperationSum,
 	}

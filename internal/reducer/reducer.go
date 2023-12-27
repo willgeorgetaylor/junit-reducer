@@ -39,7 +39,7 @@ func Reduce(params ReduceFunctionParams) error {
 		files[file] = true
 	}
 
-	// Exclude files (optional)
+	// Exclude files
 	if params.ExcludeFilePattern != "" {
 		excludedFiles, err := doublestar.Glob(params.ExcludeFilePattern)
 
@@ -48,6 +48,7 @@ func Reduce(params ReduceFunctionParams) error {
 			os.Exit(1)
 		}
 		for _, file := range excludedFiles {
+			helpers.PrintMsg("excluding file: %v", file)
 			delete(files, file)
 		}
 	}
@@ -112,29 +113,29 @@ func Reduce(params ReduceFunctionParams) error {
 	return nil
 }
 
-type SuiteFieldExtractor func(*serialization.TestSuite) float64
+type SuiteFieldExtractor func(serialization.TestSuite) float64
 
-func SuiteTimeExtractor(ts *serialization.TestSuite) float64 {
+func SuiteTimeExtractor(ts serialization.TestSuite) float64 {
 	return ts.Time
 }
 
-func SuiteTestsExtractor(ts *serialization.TestSuite) float64 {
+func SuiteTestsExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Tests)
 }
 
-func SuiteFailedExtractor(ts *serialization.TestSuite) float64 {
+func SuiteFailedExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Failed)
 }
 
-func SuiteErrorsExtractor(ts *serialization.TestSuite) float64 {
+func SuiteErrorsExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Errors)
 }
 
-func SuiteSkippedExtractor(ts *serialization.TestSuite) float64 {
+func SuiteSkippedExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Skipped)
 }
 
-func SuiteAssertionsExtractor(ts *serialization.TestSuite) float64 {
+func SuiteAssertionsExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Assertions)
 }
 
@@ -183,87 +184,155 @@ func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params Reduc
 		testSuite.Assertions = roundToInt(reducedAssertions, params.RoundingMode)
 	}
 
+	reducedTestCases, err := reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperatorTestCasesTime)
+	if err != nil {
+		return nil, err
+	} else {
+		testSuite.TestCases = reducedTestCases
+	}
+
 	return []serialization.TestSuite{testSuite}, nil
 }
 
+func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.TestCaseField, operation enums.AggregateOperation) ([]serialization.TestCase, error) {
+	groupedCases := make(map[string][]serialization.TestCase)
+
+	for _, testSuite := range testSuiteSlice {
+		for _, testCase := range testSuite.TestCases {
+			key := extractKeyFromCase(testCase, reduceBy)
+			groupedCases[key] = append(groupedCases[key], testCase)
+		}
+	}
+
+	reducedCases := make([]serialization.TestCase, 0, len(groupedCases))
+
+	for _, cases := range groupedCases {
+		baseCase := cases[0]
+		reducedTime, err := reduceTestCaseTimes(cases, operation)
+		if err != nil {
+			return nil, err
+		} else {
+			baseCase.Time = reducedTime
+		}
+		reducedCases = append(reducedCases, baseCase)
+	}
+
+	return reducedCases, nil
+}
+
+func extractKeyFromCase(testCase serialization.TestCase, reduceBy enums.TestCaseField) string {
+	if reduceBy == enums.TestCaseFieldName {
+		return testCase.Name
+	} else if reduceBy == enums.TestCaseFieldClassname {
+		return testCase.Classname
+	} else if reduceBy == enums.TestCaseFieldFile {
+		return testCase.File
+	} else {
+		return testCase.Name
+	}
+}
+
+func reduceTestCaseTimes(testCaseSlice []serialization.TestCase, operation enums.AggregateOperation) (float64, error) {
+	slice := make([]float64, 0, len(testCaseSlice))
+	for _, testCase := range testCaseSlice {
+		slice = append(slice, testCase.Time)
+	}
+	return reduce(slice, operation)
+}
+
 func reduceTestSuites(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor, operation enums.AggregateOperation) (float64, error) {
+	slice := make([]float64, 0, len(testSuiteSlice))
+	for _, testSuite := range testSuiteSlice {
+		slice = append(slice, extractor(testSuite))
+	}
+	return reduce(slice, operation)
+}
+
+func reduce(slice []float64, operation enums.AggregateOperation) (float64, error) {
 	if operation == enums.AggregateOperationMean {
-		return reduceByMean(testSuiteSlice, extractor), nil
+		return reduceMean(slice), nil
 	} else if operation == enums.AggregateOperationMax {
-		return reduceByMax(testSuiteSlice, extractor), nil
-	} else if operation == enums.AgregateOperationMin {
-		return reduceByMin(testSuiteSlice, extractor), nil
+		return reduceMax(slice), nil
+	} else if operation == enums.AggregateOperationMin {
+		return reduceMin(slice), nil
 	} else if operation == enums.AggregateOperationMode {
-		return reduceByMode(testSuiteSlice, extractor), nil
+		return reduceMode(slice), nil
 	} else if operation == enums.AggregateOperationSum {
-		return reduceBySum(testSuiteSlice, extractor), nil
+		return reduceSum(slice), nil
 	} else if operation == enums.AggregateOperationMedian {
-		return reduceByMedian(testSuiteSlice, extractor), nil
+		return reduceMedian(slice), nil
 	} else {
 		return 0, nil
 	}
 }
 
-func reduceByMax(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
+func reduceMax(slice []float64) float64 {
+	if len(slice) == 0 {
+		return 0
+	}
 	var max float64 = 0
-	for _, testSuite := range testSuiteSlice {
-		max = math.Max(extractor(&testSuite), max)
+	for _, val := range slice {
+		max = math.Max(val, max)
 	}
 	return max
 }
 
-func reduceByMean(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
-	var total float64 = 0
-	for _, testSuite := range testSuiteSlice {
-		total += extractor(&testSuite)
+func reduceMin(slice []float64) float64 {
+	if len(slice) == 0 {
+		return 0
 	}
-	mean := total / float64(len(testSuiteSlice))
-	return mean
-}
-
-func reduceByMin(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
-	var min float64 = 0
-	for _, testSuite := range testSuiteSlice {
-		min = math.Min(extractor(&testSuite), min)
+	var min float64 = slice[0]
+	for _, val := range slice {
+		min = math.Min(val, min)
 	}
 	return min
 }
 
-func reduceByMode(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
-	freqs := make(map[float64]int)
-	for _, testSuite := range testSuiteSlice {
-		val := extractor(&testSuite)
-		freqs[val] += 1
+func reduceMean(slice []float64) float64 {
+	if len(slice) == 0 {
+		return 0
 	}
-	var topVal float64 = 0.0
-	var topCount int = 0.0
-	for val, count := range freqs {
-		if count >= topCount {
-			topCount = count
+	var total float64 = 0
+	for _, val := range slice {
+		total += val
+	}
+	mean := total / float64(len(slice))
+	return mean
+}
+
+func reduceMode(slice []float64) float64 {
+	if len(slice) == 0 {
+		return 0
+	}
+	freqs := make(map[float64]int)
+	for _, val := range slice {
+		freqs[val]++
+	}
+	var topVal float64 = 0
+	var topFreq int = 0
+	for val, freq := range freqs {
+		if freq > topFreq {
 			topVal = val
+			topFreq = freq
 		}
 	}
 	return topVal
 }
 
-func reduceBySum(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
+func reduceSum(slice []float64) float64 {
 	var total float64 = 0
-	for _, testSuite := range testSuiteSlice {
-		total += extractor(&testSuite)
+	for _, val := range slice {
+		total += val
 	}
 	return total
 }
 
-func reduceByMedian(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor) float64 {
-	vals := make([]float64, 0, len(testSuiteSlice))
-	for _, testSuite := range testSuiteSlice {
-		vals = append(vals, extractor(&testSuite))
-	}
-	sort.Slice(vals, func(i, j int) bool {
-		return vals[i] < vals[j]
-	})
-	medianIndex := medianIndex(len(vals))
-	return vals[medianIndex]
+func reduceMedian(slice []float64) float64 {
+	sortedSlice := make([]float64, len(slice))
+	copy(sortedSlice, slice)
+	sort.Float64s(sortedSlice)
+	medianIndex := medianIndex(len(sortedSlice))
+	return sortedSlice[medianIndex]
 }
 
 func medianIndex(sliceLength int) int {

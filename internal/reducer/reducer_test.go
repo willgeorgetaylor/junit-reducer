@@ -19,7 +19,7 @@ func setup() {
 }
 
 func tearDown() {
-	clearOutputDir()
+	// clearOutputDir()
 }
 
 func assertTestFile(t *testing.T, testFile serialization.TestSuites) {
@@ -96,8 +96,30 @@ func assertTestFile(t *testing.T, testFile serialization.TestSuites) {
 		if xmlTestSuites.TestSuites[i].Assertions != testFile.TestSuites[i].Assertions {
 			t.Errorf("expected test suite for file '%s' to report %d assertions", xmlTestSuites.TestSuites[i].File, testFile.TestSuites[i].Assertions)
 		}
-	}
 
+		if len(xmlTestSuites.TestSuites[i].TestCases) != len(testFile.TestSuites[i].TestCases) {
+			t.Errorf("expected test suite for file '%s' to own %d child test cases", xmlTestSuites.TestSuites[i].File, len(testFile.TestSuites[i].TestCases))
+		}
+
+		for j := 0; j < len(testFile.TestSuites[i].TestCases); j++ {
+			var caseFound bool = false
+
+			for k := 0; k < len(xmlTestSuites.TestSuites[i].TestCases); k++ {
+				if xmlTestSuites.TestSuites[i].TestCases[k].Name == testFile.TestSuites[i].TestCases[j].Name &&
+					xmlTestSuites.TestSuites[i].TestCases[k].Classname == testFile.TestSuites[i].TestCases[j].Classname &&
+					xmlTestSuites.TestSuites[i].TestCases[k].File == testFile.TestSuites[i].TestCases[j].File &&
+					xmlTestSuites.TestSuites[i].TestCases[k].Line == testFile.TestSuites[i].TestCases[j].Line &&
+					xmlTestSuites.TestSuites[i].TestCases[k].Assertions == testFile.TestSuites[i].TestCases[j].Assertions &&
+					xmlTestSuites.TestSuites[i].TestCases[k].Time == testFile.TestSuites[i].TestCases[j].Time {
+					caseFound = true
+				}
+			}
+
+			if !caseFound {
+				t.Errorf("expected test suite for file '%s' to own identical test case with name '%s'", xmlTestSuites.TestSuites[i].File, testFile.TestSuites[i].TestCases[j].Name)
+			}
+		}
+	}
 }
 
 func TestBasicReduce(t *testing.T) {
@@ -129,12 +151,649 @@ func TestBasicReduce(t *testing.T) {
 					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 					FileName:   "Sample.xml",
 					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       12.873165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       4.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       4.148554419999982,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestExcludeFilePattern(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "fixtures/Sample.xml",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample2.xml",
+					Time:       69.09959481199999,
 					Tests:      7,
 					Failed:     0,
 					Errors:     0,
 					Skipped:    0,
 					Assertions: 20,
-					TestCases:  []serialization.TestCase{},
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       10.373165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       2.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       1.1485544199999822,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestReduceTestSuitesByFilepath(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       12.873165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       4.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       4.148554419999982,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestReduceTestCasesByClassName(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       7.239578845666661,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestReduceTestCasesByFilename(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldFile,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       7.239578845666661,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestMaxAggOperation(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMax,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMax,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMax,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMax,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMax,
+		OperatorTestSuitesTime:       enums.AggregateOperationMax,
+		OperatorTestCasesTime:        enums.AggregateOperationMax,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       69.09959481199999,
+					Tests:      7,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 20,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       15.373165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       6.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       7.148554419999982,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestMinAggOperation(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMin,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMin,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMin,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMin,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMin,
+		OperatorTestSuitesTime:       enums.AggregateOperationMin,
+		OperatorTestCasesTime:        enums.AggregateOperationMin,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       29.099594811999992,
+					Tests:      2,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 14,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       10.373165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       2.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       1.1485544199999822,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestSumAggOperation(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationSum,
+		OperatorTestSuitesFailed:     enums.AggregateOperationSum,
+		OperatorTestSuitesErrors:     enums.AggregateOperationSum,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationSum,
+		OperatorTestSuitesAssertions: enums.AggregateOperationSum,
+		OperatorTestSuitesTime:       enums.AggregateOperationSum,
+		OperatorTestCasesTime:        enums.AggregateOperationSum,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       98.19918962399998,
+					Tests:      9,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 34,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       25.746330864000015,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       9.394033369999988,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       8.297108839999964,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestMedianAggOperation(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		OperatorTestSuitesTests:      enums.AggregateOperationMedian,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMedian,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMedian,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMedian,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMedian,
+		OperatorTestSuitesTime:       enums.AggregateOperationMedian,
+		OperatorTestCasesTime:        enums.AggregateOperationMedian,
+		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       29.099594811999992,
+					Tests:      2,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 14,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       6.697016684999994,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestRoundingModeCeil(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeCeil,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       12.873165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       4.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       4.148554419999982,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestRoundingModeFloor(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		OperatorTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                 enums.RoundingModeFloor,
+	})
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      4,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       12.873165432000008,
+						},
+						{
+							Name:       "test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       176,
+							Assertions: 2,
+							Time:       4.697016684999994,
+						},
+						{
+							Name:       "test_should_not_see_Creative_Services_Inc_integration_when_removed",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       53,
+							Assertions: 1,
+							Time:       4.148554419999982,
+						},
+					},
 				},
 			},
 		},

@@ -140,7 +140,7 @@ func init() {
 	rootCmd.Flags().StringVar(&outputPath, "output-path", "./output/", "Output path for synthetic JUnit XML reports (required)")
 	rootCmd.MarkFlagRequired("output-path")
 	rootCmd.Flags().StringVar(&exclude, "exclude", "", "Pattern to exclude from input JUnit XML reports")
-	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-test-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldName], "Reduce test suites by name or filepath")
+	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-test-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldNameFilepath], "Reduce test suites by name or filepath or both")
 	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-test-cases-by", enums.TestCaseFieldKeys[enums.TestCaseFieldName], "Reduce test cases by name, classname, or file")
 	rootCmd.Flags().StringVar(&operatorTestSuitesSkippedString, "operator-test-suites-skipped", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites skipped")
 	rootCmd.Flags().StringVar(&operatorTestSuitesFailedString, "operator-test-suites-failed", enums.AggregateOperationKeys[enums.AggregateOperationMean], "Operator for test suites failed")
