@@ -19,7 +19,7 @@ func setup() {
 }
 
 func tearDown() {
-	// clearOutputDir()
+	clearOutputDir()
 }
 
 func assertTestFile(t *testing.T, testFile serialization.TestSuites) {
