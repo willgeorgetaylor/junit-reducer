@@ -15,19 +15,19 @@ import (
 
 var (
 	// Used for flags.
-	include                            string
-	exclude                            string
-	outputPath                         string
-	reduceTestSuitesByString           string
-	reduceTestCasesByString            string
-	operatorTestSuitesSkippedString    string
-	operatorTestSuitesFailedString     string
-	operatorTestSuitesErrorsString     string
-	operatorTestSuitesTestsString      string
-	operatorTestSuitesAssertionsString string
-	operatorTestSuitesTimeString       string
-	operatorTestCasesTimeString        string
-	roundingModeString                 string
+	include                             string
+	exclude                             string
+	outputPath                          string
+	reduceTestSuitesByString            string
+	reduceTestCasesByString             string
+	operationTestSuitesSkippedString    string
+	operationTestSuitesFailedString     string
+	operationTestSuitesErrorsString     string
+	operationTestSuitesTestsString      string
+	operationTestSuitesAssertionsString string
+	operationTestSuitesTimeString       string
+	operationTestCasesTimeString        string
+	roundingModeString                  string
 )
 
 func invalidSelectionMessage(field string, selection string, options []string) string {
@@ -65,45 +65,45 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		operatorTestSuitesSkipped, ok := enums.AggregateOperationValues[operatorTestSuitesSkippedString]
+		operationTestSuitesSkipped, ok := enums.AggregateOperationValues[operationTestSuitesSkippedString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-skipped-string", operatorTestSuitesSkippedString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-skipped-string", operationTestSuitesSkippedString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestSuitesFailed, ok := enums.AggregateOperationValues[operatorTestSuitesFailedString]
+		operationTestSuitesFailed, ok := enums.AggregateOperationValues[operationTestSuitesFailedString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-failed-string", operatorTestSuitesFailedString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-failed-string", operationTestSuitesFailedString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestSuitesErrors, ok := enums.AggregateOperationValues[operatorTestSuitesErrorsString]
+		operationTestSuitesErrors, ok := enums.AggregateOperationValues[operationTestSuitesErrorsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-errors-string", operatorTestSuitesErrorsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-errors-string", operationTestSuitesErrorsString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestSuitesTests, ok := enums.AggregateOperationValues[operatorTestSuitesTestsString]
+		operationTestSuitesTests, ok := enums.AggregateOperationValues[operationTestSuitesTestsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-tests-string", operatorTestSuitesTestsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-tests-string", operationTestSuitesTestsString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestSuitesAssertions, ok := enums.AggregateOperationValues[operatorTestSuitesAssertionsString]
+		operationTestSuitesAssertions, ok := enums.AggregateOperationValues[operationTestSuitesAssertionsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-assertions-string", operatorTestSuitesAssertionsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-assertions-string", operationTestSuitesAssertionsString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestSuitesTime, ok := enums.AggregateOperationValues[operatorTestSuitesTimeString]
+		operationTestSuitesTime, ok := enums.AggregateOperationValues[operationTestSuitesTimeString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-suites-time-string", operatorTestSuitesTimeString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-time-string", operationTestSuitesTimeString, enums.GetAggregateOperations()))
 			return
 		}
 
-		operatorTestCasesTime, ok := enums.AggregateOperationValues[operatorTestCasesTimeString]
+		operationTestCasesTime, ok := enums.AggregateOperationValues[operationTestCasesTimeString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operator-test-cases-time-string", operatorTestCasesTimeString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-cases-time-string", operationTestCasesTimeString, enums.GetAggregateOperations()))
 			return
 		}
 
@@ -115,19 +115,19 @@ var rootCmd = &cobra.Command{
 
 		err := reducer.Reduce(
 			reducer.ReduceFunctionParams{
-				IncludeFilePattern:           include,
-				ExcludeFilePattern:           exclude,
-				OutputPath:                   outputPath,
-				ReduceTestSuitesBy:           reduceTestSuitesBy,
-				ReduceTestCasesBy:            reduceTestCasesBy,
-				OperatorTestSuitesTests:      operatorTestSuitesTests,
-				OperatorTestSuitesFailed:     operatorTestSuitesFailed,
-				OperatorTestSuitesErrors:     operatorTestSuitesErrors,
-				OperatorTestSuitesSkipped:    operatorTestSuitesSkipped,
-				OperatorTestSuitesAssertions: operatorTestSuitesAssertions,
-				OperatorTestSuitesTime:       operatorTestSuitesTime,
-				OperatorTestCasesTime:        operatorTestCasesTime,
-				RoundingMode:                 roundingMode,
+				IncludeFilePattern:            include,
+				ExcludeFilePattern:            exclude,
+				OutputPath:                    outputPath,
+				ReduceTestSuitesBy:            reduceTestSuitesBy,
+				ReduceTestCasesBy:             reduceTestCasesBy,
+				OperationTestSuitesTests:      operationTestSuitesTests,
+				OperationTestSuitesFailed:     operationTestSuitesFailed,
+				OperationTestSuitesErrors:     operationTestSuitesErrors,
+				OperationTestSuitesSkipped:    operationTestSuitesSkipped,
+				OperationTestSuitesAssertions: operationTestSuitesAssertions,
+				OperationTestSuitesTime:       operationTestSuitesTime,
+				OperationTestCasesTime:        operationTestCasesTime,
+				RoundingMode:                  roundingMode,
 			},
 		)
 
@@ -156,12 +156,12 @@ func init() {
 	rootCmd.Flags().StringVar(&exclude, "exclude", "", "Pattern to exclude from input JUnit XML reports")
 	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldNameFilepath], fmt.Sprintf("Reduce test suites by name or filepath or both. Options: %s", joinOptionsString(enums.GetTestSuiteFields())))
 	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-cases-by", enums.TestCaseFieldKeys[enums.TestCaseFieldName], fmt.Sprintf("Reduce test cases by name, classname, or file. Options: %s", joinOptionsString(enums.GetTestCaseFields())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesSkippedString, "op-suites-skipped", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites skipped. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesFailedString, "op-suites-failed", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites failed. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesErrorsString, "op-suites-errors", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites errors. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesTestsString, "op-suites-tests", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites tests. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesAssertionsString, "op-suites-assertions", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites assertions. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestSuitesTimeString, "op-suites-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test suites time. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
-	rootCmd.Flags().StringVar(&operatorTestCasesTimeString, "op-cases-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operator for test cases time. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesSkippedString, "op-suites-skipped", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites skipped. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesFailedString, "op-suites-failed", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites failed. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesErrorsString, "op-suites-errors", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites errors. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesTestsString, "op-suites-tests", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites tests. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesAssertionsString, "op-suites-assertions", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites assertions. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestSuitesTimeString, "op-suites-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test suites time. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
+	rootCmd.Flags().StringVar(&operationTestCasesTimeString, "op-cases-time", enums.AggregateOperationKeys[enums.AggregateOperationMean], fmt.Sprintf("Operation for test cases time. Options: %s", joinOptionsString(enums.GetAggregateOperations())))
 	rootCmd.Flags().StringVar(&roundingModeString, "rounding-mode", enums.RoundingModeKeys[enums.RoundingModeRound], fmt.Sprintf("Rounding mode for counts that should be integers. Options: %s", joinOptionsString(enums.GetRoundingModes())))
 }

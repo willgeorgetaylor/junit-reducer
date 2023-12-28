@@ -12,19 +12,19 @@ import (
 )
 
 type ReduceFunctionParams struct {
-	IncludeFilePattern           string
-	ExcludeFilePattern           string
-	OutputPath                   string
-	ReduceTestSuitesBy           enums.TestSuiteField
-	ReduceTestCasesBy            enums.TestCaseField
-	OperatorTestSuitesTests      enums.AggregateOperation
-	OperatorTestSuitesFailed     enums.AggregateOperation
-	OperatorTestSuitesErrors     enums.AggregateOperation
-	OperatorTestSuitesSkipped    enums.AggregateOperation
-	OperatorTestSuitesAssertions enums.AggregateOperation
-	OperatorTestSuitesTime       enums.AggregateOperation
-	OperatorTestCasesTime        enums.AggregateOperation
-	RoundingMode                 enums.RoundingMode
+	IncludeFilePattern            string
+	ExcludeFilePattern            string
+	OutputPath                    string
+	ReduceTestSuitesBy            enums.TestSuiteField
+	ReduceTestCasesBy             enums.TestCaseField
+	OperationTestSuitesTests      enums.AggregateOperation
+	OperationTestSuitesFailed     enums.AggregateOperation
+	OperationTestSuitesErrors     enums.AggregateOperation
+	OperationTestSuitesSkipped    enums.AggregateOperation
+	OperationTestSuitesAssertions enums.AggregateOperation
+	OperationTestSuitesTime       enums.AggregateOperation
+	OperationTestCasesTime        enums.AggregateOperation
+	RoundingMode                  enums.RoundingMode
 }
 
 func Reduce(params ReduceFunctionParams) error {
@@ -72,7 +72,7 @@ func Reduce(params ReduceFunctionParams) error {
 	}
 
 	// For now, just reduce testsuites by filepath, and average time values
-	// TODO: Add support for other flags (reduceTestCasesBy, operatorTestSuitesTests, etc.)
+	// TODO: Add support for other flags (reduceTestCasesBy, operationTestSuitesTests, etc.)
 
 	testSuiteMap := make(map[string][]serialization.TestSuite)
 
@@ -142,49 +142,49 @@ func SuiteAssertionsExtractor(ts serialization.TestSuite) float64 {
 func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params ReduceFunctionParams) ([]serialization.TestSuite, error) {
 	testSuite := testSuiteSlice[0]
 
-	reducedTime, err := reduceTestSuites(testSuiteSlice, SuiteTimeExtractor, params.OperatorTestSuitesTime)
+	reducedTime, err := reduceTestSuites(testSuiteSlice, SuiteTimeExtractor, params.OperationTestSuitesTime)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Time = reducedTime
 	}
 
-	reducedTests, err := reduceTestSuites(testSuiteSlice, SuiteTestsExtractor, params.OperatorTestSuitesTests)
+	reducedTests, err := reduceTestSuites(testSuiteSlice, SuiteTestsExtractor, params.OperationTestSuitesTests)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Tests = roundToInt(reducedTests, params.RoundingMode)
 	}
 
-	reducedFailed, err := reduceTestSuites(testSuiteSlice, SuiteFailedExtractor, params.OperatorTestSuitesFailed)
+	reducedFailed, err := reduceTestSuites(testSuiteSlice, SuiteFailedExtractor, params.OperationTestSuitesFailed)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Failed = roundToInt(reducedFailed, params.RoundingMode)
 	}
 
-	reducedErrors, err := reduceTestSuites(testSuiteSlice, SuiteErrorsExtractor, params.OperatorTestSuitesErrors)
+	reducedErrors, err := reduceTestSuites(testSuiteSlice, SuiteErrorsExtractor, params.OperationTestSuitesErrors)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Errors = roundToInt(reducedErrors, params.RoundingMode)
 	}
 
-	reducedSkipped, err := reduceTestSuites(testSuiteSlice, SuiteSkippedExtractor, params.OperatorTestSuitesSkipped)
+	reducedSkipped, err := reduceTestSuites(testSuiteSlice, SuiteSkippedExtractor, params.OperationTestSuitesSkipped)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Skipped = roundToInt(reducedSkipped, params.RoundingMode)
 	}
 
-	reducedAssertions, err := reduceTestSuites(testSuiteSlice, SuiteAssertionsExtractor, params.OperatorTestSuitesAssertions)
+	reducedAssertions, err := reduceTestSuites(testSuiteSlice, SuiteAssertionsExtractor, params.OperationTestSuitesAssertions)
 	if err != nil {
 		return nil, err
 	} else {
 		testSuite.Assertions = roundToInt(reducedAssertions, params.RoundingMode)
 	}
 
-	reducedTestCases, err := reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperatorTestCasesTime)
+	reducedTestCases, err := reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperationTestCasesTime)
 	if err != nil {
 		return nil, err
 	} else {
