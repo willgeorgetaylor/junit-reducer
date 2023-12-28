@@ -127,11 +127,11 @@ func TestBasicReduce(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -139,7 +139,7 @@ func TestBasicReduce(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	assertTestFile(
@@ -192,16 +192,16 @@ func TestBasicReduce(t *testing.T) {
 	}
 }
 
-func TestExcludeFilePattern(t *testing.T) {
+func TestInvalidIncludeFilePattern(t *testing.T) {
 	setup()
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "fixtures/Sample.xml",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "[^bc",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -209,7 +209,31 @@ func TestExcludeFilePattern(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}
+
+func TestExcludeFilePattern(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	err := Reduce(ReduceFunctionParams{
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "fixtures/Sample.xml",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
+		OperationTestSuitesTests:      enums.AggregateOperationMean,
+		OperationTestSuitesFailed:     enums.AggregateOperationMean,
+		OperationTestSuitesErrors:     enums.AggregateOperationMean,
+		OperationTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperationTestSuitesAssertions: enums.AggregateOperationMean,
+		OperationTestSuitesTime:       enums.AggregateOperationMean,
+		OperationTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -262,16 +286,16 @@ func TestExcludeFilePattern(t *testing.T) {
 	)
 }
 
-func TestReduceTestSuitesByFilepath(t *testing.T) {
+func TestInvalidExcludeFilePattern(t *testing.T) {
 	setup()
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "[^bc",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -279,7 +303,31 @@ func TestReduceTestSuitesByFilepath(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeRound,
+	})
+
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}
+
+func TestReduceTestSuitesByFilepath(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	err := Reduce(ReduceFunctionParams{
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
+		OperationTestSuitesTests:      enums.AggregateOperationMean,
+		OperationTestSuitesFailed:     enums.AggregateOperationMean,
+		OperationTestSuitesErrors:     enums.AggregateOperationMean,
+		OperationTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperationTestSuitesAssertions: enums.AggregateOperationMean,
+		OperationTestSuitesTime:       enums.AggregateOperationMean,
+		OperationTestCasesTime:        enums.AggregateOperationMean,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -337,11 +385,11 @@ func TestReduceTestCasesByClassName(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldClassname,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -349,7 +397,7 @@ func TestReduceTestCasesByClassName(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -391,11 +439,11 @@ func TestReduceTestCasesByFilename(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldFile,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldFile,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -403,7 +451,7 @@ func TestReduceTestCasesByFilename(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -445,11 +493,11 @@ func TestMaxAggOperation(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMax,
 		OperationTestSuitesFailed:     enums.AggregateOperationMax,
 		OperationTestSuitesErrors:     enums.AggregateOperationMax,
@@ -457,7 +505,7 @@ func TestMaxAggOperation(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMax,
 		OperationTestSuitesTime:       enums.AggregateOperationMax,
 		OperationTestCasesTime:        enums.AggregateOperationMax,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -515,11 +563,11 @@ func TestMinAggOperation(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMin,
 		OperationTestSuitesFailed:     enums.AggregateOperationMin,
 		OperationTestSuitesErrors:     enums.AggregateOperationMin,
@@ -527,7 +575,7 @@ func TestMinAggOperation(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMin,
 		OperationTestSuitesTime:       enums.AggregateOperationMin,
 		OperationTestCasesTime:        enums.AggregateOperationMin,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -585,11 +633,11 @@ func TestSumAggOperation(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationSum,
 		OperationTestSuitesFailed:     enums.AggregateOperationSum,
 		OperationTestSuitesErrors:     enums.AggregateOperationSum,
@@ -597,7 +645,7 @@ func TestSumAggOperation(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationSum,
 		OperationTestSuitesTime:       enums.AggregateOperationSum,
 		OperationTestCasesTime:        enums.AggregateOperationSum,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -655,11 +703,11 @@ func TestMedianAggOperation(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldClassname,
 		OperationTestSuitesTests:      enums.AggregateOperationMedian,
 		OperationTestSuitesFailed:     enums.AggregateOperationMedian,
 		OperationTestSuitesErrors:     enums.AggregateOperationMedian,
@@ -667,7 +715,7 @@ func TestMedianAggOperation(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMedian,
 		OperationTestSuitesTime:       enums.AggregateOperationMedian,
 		OperationTestCasesTime:        enums.AggregateOperationMedian,
-		RoundingMode:                 enums.RoundingModeRound,
+		RoundingMode:                  enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -709,11 +757,11 @@ func TestModeAggOperation(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldClassname,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -722,7 +770,7 @@ func TestModeAggOperation(t *testing.T) {
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		// Only testing mode on case times
 		OperationTestCasesTime: enums.AggregateOperationMode,
-		RoundingMode:          enums.RoundingModeRound,
+		RoundingMode:           enums.RoundingModeRound,
 	})
 
 	if err != nil {
@@ -764,11 +812,11 @@ func TestRoundingModeCeil(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -776,7 +824,7 @@ func TestRoundingModeCeil(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeCeil,
+		RoundingMode:                  enums.RoundingModeCeil,
 	})
 
 	if err != nil {
@@ -834,11 +882,11 @@ func TestRoundingModeFloor(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:           "fixtures/*.xml",
-		ExcludeFilePattern:           "",
-		OutputPath:                   "output/",
-		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
-		ReduceTestCasesBy:            enums.TestCaseFieldName,
+		IncludeFilePattern:            "fixtures/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
 		OperationTestSuitesTests:      enums.AggregateOperationMean,
 		OperationTestSuitesFailed:     enums.AggregateOperationMean,
 		OperationTestSuitesErrors:     enums.AggregateOperationMean,
@@ -846,7 +894,7 @@ func TestRoundingModeFloor(t *testing.T) {
 		OperationTestSuitesAssertions: enums.AggregateOperationMean,
 		OperationTestSuitesTime:       enums.AggregateOperationMean,
 		OperationTestCasesTime:        enums.AggregateOperationMean,
-		RoundingMode:                 enums.RoundingModeFloor,
+		RoundingMode:                  enums.RoundingModeFloor,
 	})
 
 	if err != nil {

@@ -32,8 +32,8 @@ func Reduce(params ReduceFunctionParams) error {
 	includedReports, err := doublestar.Glob(params.IncludeFilePattern)
 
 	if err != nil {
-		helpers.FatalMsg("failed to enumerate included JUnit XML reports in: %v", err)
-		os.Exit(1)
+		helpers.FatalMsg("failed to enumerate included JUnit XML reports: %v", err)
+		return err
 	}
 	for _, file := range includedReports {
 		files[file] = true
@@ -44,8 +44,8 @@ func Reduce(params ReduceFunctionParams) error {
 		excludedFiles, err := doublestar.Glob(params.ExcludeFilePattern)
 
 		if err != nil {
-			helpers.FatalMsg("failed to enumerate excluded JUnit XML reports in: %v", err)
-			os.Exit(1)
+			helpers.FatalMsg("failed to enumerate excluded JUnit XML reports: %v", err)
+			return err
 		}
 		for _, file := range excludedFiles {
 			helpers.PrintMsg("excluding file: %v", file)
@@ -68,7 +68,7 @@ func Reduce(params ReduceFunctionParams) error {
 
 	if err != nil {
 		helpers.FatalMsg("failed to deserialize JUnit XML reports: %v", err)
-		os.Exit(1)
+		return err
 	}
 
 	// For now, just reduce testsuites by filepath, and average time values
@@ -105,7 +105,7 @@ func Reduce(params ReduceFunctionParams) error {
 	err = os.MkdirAll(params.OutputPath, os.ModePerm)
 	if err != nil {
 		helpers.FatalMsg("failed to create output directory: %v", err)
-		os.Exit(1)
+		return err
 	}
 
 	serialization.Serialize(params.OutputPath, testSuites)
