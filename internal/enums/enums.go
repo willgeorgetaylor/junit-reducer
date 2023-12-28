@@ -1,5 +1,9 @@
 package enums
 
+import (
+	"github.com/willgeorgetaylor/junit-reducer/internal/helpers"
+)
+
 // TestSuiteField
 
 type TestSuiteField int
@@ -29,6 +33,7 @@ func GetTestSuiteFields() []string {
 		TestSuiteFieldInputs[i] = key
 		i++
 	}
+	helpers.SortStrings(TestSuiteFieldInputs)
 	return TestSuiteFieldInputs
 }
 
@@ -61,6 +66,7 @@ func GetTestCaseFields() []string {
 		TestCaseFieldInputs[i] = key
 		i++
 	}
+	helpers.SortStrings(TestCaseFieldInputs)
 	return TestCaseFieldInputs
 }
 
@@ -102,6 +108,7 @@ func GetAggregateOperations() []string {
 		AggregateOperationInputs[i] = key
 		i++
 	}
+	helpers.SortStrings(AggregateOperationInputs)
 	return AggregateOperationInputs
 }
 
@@ -134,5 +141,6 @@ func GetRoundingModes() []string {
 		RoundingModeInputs[i] = key
 		i++
 	}
+	helpers.SortStrings(RoundingModeInputs)
 	return RoundingModeInputs
 }
