@@ -23,8 +23,8 @@ Typically, you'll be using `junit-reducer` within a scheduled cron task to reduc
 > If you're using GitHub Actions, check out the [Action](https://github.com/willgeorgetaylor/reduce-junit-reports) on GitHub Marketplace, if you prefer that sort of thing.
 
 ```yaml
-name: junit-test-report-compression
-run-name: Compress JUnit Test Reports
+name: junit-test-report-averaging
+run-name: Create Average JUnit Test Reports
 on:
   schedule:
       # Run every morning at 8AM
