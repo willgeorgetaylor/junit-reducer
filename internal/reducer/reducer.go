@@ -93,10 +93,7 @@ func Reduce(params ReduceFunctionParams) error {
 
 	// Reduce times and other aggregate fields
 	for key, testSuiteSlice := range testSuiteMap {
-		reducedTestSlice, err := reduceTestSuiteSlice(testSuiteSlice, params)
-		if err != nil {
-			return err
-		}
+		reducedTestSlice := reduceTestSuiteSlice(testSuiteSlice, params)
 		testSuiteMap[key] = reducedTestSlice
 	}
 
@@ -144,7 +141,7 @@ func SuiteAssertionsExtractor(ts serialization.TestSuite) float64 {
 	return float64(ts.Assertions)
 }
 
-func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params ReduceFunctionParams) ([]serialization.TestSuite, error) {
+func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params ReduceFunctionParams) []serialization.TestSuite {
 	testSuite := testSuiteSlice[0]
 
 	testSuite.Time = reduceTestSuites(testSuiteSlice, SuiteTimeExtractor, params.OperationTestSuitesTime)
@@ -172,7 +169,7 @@ func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params Reduc
 	// Cases
 	testSuite.TestCases = reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperationTestCasesTime)
 
-	return []serialization.TestSuite{testSuite}, nil
+	return []serialization.TestSuite{testSuite}
 }
 
 func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.TestCaseField, operation enums.AggregateOperation) []serialization.TestCase {
@@ -248,9 +245,6 @@ func reduceMax(slice []float64) float64 {
 }
 
 func reduceMin(slice []float64) float64 {
-	if len(slice) == 0 {
-		return 0
-	}
 	var min float64 = slice[0]
 	for _, val := range slice {
 		min = math.Min(val, min)
@@ -259,9 +253,6 @@ func reduceMin(slice []float64) float64 {
 }
 
 func reduceMean(slice []float64) float64 {
-	if len(slice) == 0 {
-		return 0
-	}
 	var total float64 = 0
 	for _, val := range slice {
 		total += val
@@ -271,9 +262,6 @@ func reduceMean(slice []float64) float64 {
 }
 
 func reduceMode(slice []float64) float64 {
-	if len(slice) == 0 {
-		return 0
-	}
 	freqs := make(map[float64]int)
 	for _, val := range slice {
 		freqs[val]++
