@@ -81,7 +81,7 @@ In busier projects, CI will be uploading reports frequently, so even if you take
 
 In very busy projects, there is also a more **problematic race condition possible**, with larger downloads and test runners starting at different times. As CI runs from other commits upload their reports to the same remote source that you're downloading them from, if any of your concurrent runners download reports with different values, the input data is misaligned and the splitting operation is corrupted. However, because the download and splitting operation is being performed in a distributed manner (across all of the runners concurrently) this misalignment is not discoverable and it is likely that some tests in your run will be **skipped without you knowing it happened.**
 
-This can be avoided by computing the averaged reports in one place, and updating that set atomically (e.g., in a transaction) as part of a scheduled job. This is exactly the approach outlined in the [quickstart](https://github.com/willgeorgetaylor/junit-reducer?tab=readme-ov-file#quickstart) section.
+This risk can be mitigated by computing the averaged reports in one place, and updating that set as part of a scheduled job. This is exactly the approach outlined in the [quickstart](https://github.com/willgeorgetaylor/junit-reducer?tab=readme-ov-file#quickstart) section.
 
 ## Usage
 
