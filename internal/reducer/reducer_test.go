@@ -311,6 +311,7 @@ func TestInvalidExcludeFilePattern(t *testing.T) {
 }
 
 func TestUnreadableFile(t *testing.T) {
+	//nolint:errcheck
 	defer os.Chmod("fixtures/invalid/unreadable.xml", 0644)
 
 	// Make the file temporarily write-only
