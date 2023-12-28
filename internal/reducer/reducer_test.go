@@ -310,6 +310,30 @@ func TestInvalidExcludeFilePattern(t *testing.T) {
 	}
 }
 
+func TestNoFilesFound(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	err := Reduce(ReduceFunctionParams{
+		IncludeFilePattern:            "fixtures/valid/*.xml",
+		ExcludeFilePattern:            "fixtures/valid/*.xml",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
+		OperationTestSuitesTests:      enums.AggregateOperationMax,
+		OperationTestSuitesFailed:     enums.AggregateOperationMax,
+		OperationTestSuitesErrors:     enums.AggregateOperationMax,
+		OperationTestSuitesSkipped:    enums.AggregateOperationMax,
+		OperationTestSuitesAssertions: enums.AggregateOperationMax,
+		OperationTestSuitesTime:       enums.AggregateOperationMax,
+		OperationTestCasesTime:        enums.AggregateOperationMax,
+	})
+
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}
+
 func TestUnreadableFile(t *testing.T) {
 	//nolint:errcheck
 	defer os.Chmod("fixtures/invalid/unreadable.xml", 0644)
@@ -338,7 +362,6 @@ func TestUnreadableFile(t *testing.T) {
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
-
 }
 
 func TestUnparseableFile(t *testing.T) {

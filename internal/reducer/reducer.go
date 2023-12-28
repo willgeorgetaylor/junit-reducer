@@ -1,6 +1,7 @@
 package reducer
 
 import (
+	"errors"
 	"math"
 	"os"
 	"sort"
@@ -51,6 +52,10 @@ func Reduce(params ReduceFunctionParams) error {
 			helpers.PrintMsg("excluding file: %v", file)
 			delete(files, file)
 		}
+	}
+
+	if (len(files)) == 0 {
+		return errors.New("no files matched the provided include pattern")
 	}
 
 	// Get paths to included files
@@ -221,9 +226,7 @@ func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.Te
 }
 
 func extractKeyFromCase(testCase serialization.TestCase, reduceBy enums.TestCaseField) string {
-	if reduceBy == enums.TestCaseFieldName {
-		return testCase.Name
-	} else if reduceBy == enums.TestCaseFieldClassname {
+	if reduceBy == enums.TestCaseFieldClassname {
 		return testCase.Classname
 	} else if reduceBy == enums.TestCaseFieldFile {
 		return testCase.File
@@ -249,9 +252,7 @@ func reduceTestSuites(testSuiteSlice []serialization.TestSuite, extractor SuiteF
 }
 
 func reduce(slice []float64, operation enums.AggregateOperation) (float64, error) {
-	if operation == enums.AggregateOperationMean {
-		return reduceMean(slice), nil
-	} else if operation == enums.AggregateOperationMax {
+	if operation == enums.AggregateOperationMax {
 		return reduceMax(slice), nil
 	} else if operation == enums.AggregateOperationMin {
 		return reduceMin(slice), nil
@@ -262,14 +263,11 @@ func reduce(slice []float64, operation enums.AggregateOperation) (float64, error
 	} else if operation == enums.AggregateOperationMedian {
 		return reduceMedian(slice), nil
 	} else {
-		return 0, nil
+		return reduceMean(slice), nil
 	}
 }
 
 func reduceMax(slice []float64) float64 {
-	if len(slice) == 0 {
-		return 0
-	}
 	var max float64 = 0
 	for _, val := range slice {
 		max = math.Max(val, max)
