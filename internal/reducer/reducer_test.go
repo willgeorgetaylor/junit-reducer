@@ -370,7 +370,7 @@ func TestReduceTestSuitesByFilepath(t *testing.T) {
 	defer tearDown()
 
 	err := Reduce(ReduceFunctionParams{
-		IncludeFilePattern:            "fixtures/*.xml",
+		IncludeFilePattern:            "fixtures/valid/*.xml",
 		ExcludeFilePattern:            "",
 		OutputPath:                    "output/",
 		ReduceTestSuitesBy:            enums.TestSuiteFieldFilepath,
