@@ -57,8 +57,9 @@ jobs:
             --include="./reports/**/*" \
             --output-path="./average-reports/"
 
-      # Upload the reduced set of test reports to a dedicated bucket/path. In your actual CI process,
-      # the CI runners will copy the contents of this path locally, to be ingested by the test splitter.
+      # Upload the reduced set of test reports to a dedicated bucket/path.
+      # In your actual CI process, the CI runners will copy the contents of
+      # this path locally, to be ingested by the test splitter.
       - name: Upload single set of averaged reports
         run: |
           aws s3 sync ./average-reports s3://your-junit-report-bucket/average-reports/ \
