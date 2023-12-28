@@ -25,19 +25,19 @@ $./junit-reducer --help
 ```
 Flags:
   -h, --help                          help for junit-reducer
-      --output-path string            Output path for synthetic JUnit XML reports (required) (default "./output/")
-      --include string                Pattern to find input JUnit XML reports (required) (default "./**/*.xml")
       --exclude string                Pattern to exclude from input JUnit XML reports
-      --op-cases-time string          Operator for test cases time. Options: "min", "max", "sum", "mean", "mode" or "median" (default "mean")
-      --op-suites-assertions string   Operator for test suites assertions. Options: "max", "sum", "mean", "mode", "median" or "min" (default "mean")
-      --op-suites-errors string       Operator for test suites errors. Options: "min", "max", "sum", "mean", "mode" or "median" (default "mean")
-      --op-suites-failed string       Operator for test suites failed. Options: "median", "min", "max", "sum", "mean" or "mode" (default "mean")
-      --op-suites-skipped string      Operator for test suites skipped. Options: "mode", "median", "min", "max", "sum" or "mean" (default "mean")
-      --op-suites-tests string        Operator for test suites tests. Options: "mode", "median", "min", "max", "sum" or "mean" (default "mean")
-      --op-suites-time string         Operator for test suites time. Options: "mode", "median", "min", "max", "sum" or "mean" (default "mean")
-      --reduce-cases-by string        Reduce test cases by name, classname, or file. Options: "name", "classname" or "file" (default "name")
-      --reduce-suites-by string       Reduce test suites by name or filepath or both. Options: "name", "filepath" or "name+filepath" (default "name+filepath")
-      --rounding-mode string          Rounding mode for counts that should be integers. Options: "round", "ceil" or "floor" (default "round")
+      --include string                Pattern to find input JUnit XML reports (required) (default "./**/*.xml")
+      --op-cases-time string          Operator for test cases time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-assertions string   Operator for test suites assertions. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-errors string       Operator for test suites errors. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-failed string       Operator for test suites failed. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-skipped string      Operator for test suites skipped. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-tests string        Operator for test suites tests. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-time string         Operator for test suites time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --output-path string            Output path for synthetic JUnit XML reports (required) (default "./output/")
+      --reduce-cases-by string        Reduce test cases by name, classname, or file. Options: "classname", "file" or "name" (default "name")
+      --reduce-suites-by string       Reduce test suites by name or filepath or both. Options: "filepath", "name" or "name+filepath" (default "name+filepath")
+      --rounding-mode string          Rounding mode for counts that should be integers. Options: "ceil", "floor" or "round" (default "round")
 ```
 
 ## Examples
