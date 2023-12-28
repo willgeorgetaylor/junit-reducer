@@ -149,8 +149,8 @@ func Execute() {
 
 //nolint:errcheck // Ignore errors from MarkFlagRequired
 func init() {
-	rootCmd.Flags().StringVar(&include, "include", "./**/*.xml", "Pattern to find input JUnit XML reports (required)")
-	rootCmd.Flags().StringVar(&outputPath, "output-path", "./output/", "Output path for synthetic JUnit XML reports (required)")
+	rootCmd.Flags().StringVar(&include, "include", "./**/*.xml", "Pattern to find input JUnit XML reports")
+	rootCmd.Flags().StringVar(&outputPath, "output-path", "./output/", "Output path for synthetic JUnit XML reports")
 	rootCmd.Flags().StringVar(&exclude, "exclude", "", "Pattern to exclude from input JUnit XML reports")
 	rootCmd.Flags().StringVar(&reduceTestSuitesByString, "reduce-suites-by", enums.TestSuiteFieldKeys[enums.TestSuiteFieldNameFilepath], fmt.Sprintf("Reduce test suites by name or filepath or both. Options: %s", joinOptionsString(enums.GetTestSuiteFields())))
 	rootCmd.Flags().StringVar(&reduceTestCasesByString, "reduce-cases-by", enums.TestCaseFieldKeys[enums.TestCaseFieldName], fmt.Sprintf("Reduce test cases by name, classname, or file. Options: %s", joinOptionsString(enums.GetTestCaseFields())))

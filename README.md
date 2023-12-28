@@ -97,7 +97,7 @@ $./junit-reducer --help
 Flags:
   -h, --help                          help for junit-reducer
       --exclude string                Pattern to exclude from input JUnit XML reports
-      --include string                Pattern to find input JUnit XML reports (required) (default "./**/*.xml")
+      --include string                Pattern to find input JUnit XML reports (default "./**/*.xml")
       --op-cases-time string          Operation for test cases time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
       --op-suites-assertions string   Operation for test suites assertions. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
       --op-suites-errors string       Operation for test suites errors. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
@@ -105,7 +105,7 @@ Flags:
       --op-suites-skipped string      Operation for test suites skipped. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
       --op-suites-tests string        Operation for test suites tests. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
       --op-suites-time string         Operation for test suites time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --output-path string            Output path for synthetic JUnit XML reports (required) (default "./output/")
+      --output-path string            Output path for synthetic JUnit XML reports (default "./output/")
       --reduce-cases-by string        Reduce test cases by name, classname, or file. Options: "classname", "file" or "name" (default "name")
       --reduce-suites-by string       Reduce test suites by name or filepath or both. Options: "filepath", "name" or "name+filepath" (default "name+filepath")
       --rounding-mode string          Rounding mode for counts that should be integers. Options: "ceil", "floor" or "round" (default "round")
