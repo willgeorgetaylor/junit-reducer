@@ -365,6 +365,37 @@ func TestUnparseableFile(t *testing.T) {
 	}
 }
 
+func TestOutputPathCannotBeCreated(t *testing.T) {
+	//nolint:errcheck
+	defer os.Remove("output")
+
+	// Creates a file called 'output' to prevent the directory being created
+	_, err := os.Create("output")
+
+	if err != nil {
+		t.Errorf("Failed to create file: %v", err)
+	}
+
+	err = Reduce(ReduceFunctionParams{
+		IncludeFilePattern:            "fixtures/valid/*.xml",
+		ExcludeFilePattern:            "",
+		OutputPath:                    "output/",
+		ReduceTestSuitesBy:            enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:             enums.TestCaseFieldName,
+		OperationTestSuitesTests:      enums.AggregateOperationMax,
+		OperationTestSuitesFailed:     enums.AggregateOperationMax,
+		OperationTestSuitesErrors:     enums.AggregateOperationMax,
+		OperationTestSuitesSkipped:    enums.AggregateOperationMax,
+		OperationTestSuitesAssertions: enums.AggregateOperationMax,
+		OperationTestSuitesTime:       enums.AggregateOperationMax,
+		OperationTestCasesTime:        enums.AggregateOperationMax,
+	})
+
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}
+
 func TestReduceTestSuitesByFilepath(t *testing.T) {
 	setup()
 	defer tearDown()
