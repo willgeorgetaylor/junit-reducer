@@ -46,7 +46,7 @@ Flags:
 
 ```bash
 junit-reducer \
-  --include="test-reports/**/*" \  # Input path for JUnit reports
+  --include="test-reports/**/*" \     # Input path for JUnit reports
   --output-path="avg-reports/"        # Output path for averaged reports
 ```
 
