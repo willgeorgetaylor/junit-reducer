@@ -179,7 +179,7 @@ func TestBasicReduce(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       4.148554419999982,
+							Time:       4.922785552499988,
 						},
 					},
 				},
@@ -253,7 +253,7 @@ func TestExcludeFilePattern(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       1.1485544199999822,
+							Time:       2.697016684999994,
 						},
 					},
 				},
@@ -323,7 +323,7 @@ func TestReduceTestSuitesByFilepath(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       4.148554419999982,
+							Time:       4.922785552499988,
 						},
 					},
 				},
@@ -377,7 +377,7 @@ func TestReduceTestCasesByClassName(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       90,
 							Assertions: 0,
-							Time:       7.239578845666661,
+							Time:       7.49765588983333,
 						},
 					},
 				},
@@ -431,7 +431,7 @@ func TestReduceTestCasesByFilename(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       90,
 							Assertions: 0,
-							Time:       7.239578845666661,
+							Time:       7.49765588983333,
 						},
 					},
 				},
@@ -571,7 +571,7 @@ func TestMinAggOperation(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       1.1485544199999822,
+							Time:       2.697016684999994,
 						},
 					},
 				},
@@ -641,7 +641,7 @@ func TestSumAggOperation(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       8.297108839999964,
+							Time:       9.845571104999976,
 						},
 					},
 				},
@@ -696,6 +696,61 @@ func TestMedianAggOperation(t *testing.T) {
 							Line:       90,
 							Assertions: 0,
 							Time:       6.697016684999994,
+						},
+					},
+				},
+			},
+		},
+	)
+}
+
+func TestModeAggOperation(t *testing.T) {
+	setup()
+	defer tearDown()
+
+	err := Reduce(ReduceFunctionParams{
+		IncludeFilePattern:           "fixtures/*.xml",
+		ExcludeFilePattern:           "",
+		OutputPath:                   "output/",
+		ReduceTestSuitesBy:           enums.TestSuiteFieldNameFilepath,
+		ReduceTestCasesBy:            enums.TestCaseFieldClassname,
+		OperatorTestSuitesTests:      enums.AggregateOperationMean,
+		OperatorTestSuitesFailed:     enums.AggregateOperationMean,
+		OperatorTestSuitesErrors:     enums.AggregateOperationMean,
+		OperatorTestSuitesSkipped:    enums.AggregateOperationMean,
+		OperatorTestSuitesAssertions: enums.AggregateOperationMean,
+		OperatorTestSuitesTime:       enums.AggregateOperationMean,
+		// Only testing mode on case times
+		OperatorTestCasesTime: enums.AggregateOperationMode,
+		RoundingMode:          enums.RoundingModeRound,
+	})
+
+	if err != nil {
+		t.Errorf("expected no error, got %s", err)
+	}
+
+	assertTestFile(
+		t,
+		serialization.TestSuites{
+			TestSuites: []serialization.TestSuite{
+				{
+					Name:       "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+					File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+					FileName:   "Sample.xml",
+					Time:       49.09959481199999,
+					Tests:      5,
+					Failed:     0,
+					Errors:     0,
+					Skipped:    0,
+					Assertions: 17,
+					TestCases: []serialization.TestCase{
+						{
+							Name:       "test_should_show_each_of_the_different_values_depending_on_which_billing_option_you_select",
+							Classname:  "Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest",
+							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
+							Line:       90,
+							Assertions: 0,
+							Time:       2.697016684999994,
 						},
 					},
 				},
@@ -765,7 +820,7 @@ func TestRoundingModeCeil(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       4.148554419999982,
+							Time:       4.922785552499988,
 						},
 					},
 				},
@@ -835,7 +890,7 @@ func TestRoundingModeFloor(t *testing.T) {
 							File:       "test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb",
 							Line:       53,
 							Assertions: 1,
-							Time:       4.148554419999982,
+							Time:       4.922785552499988,
 						},
 					},
 				},

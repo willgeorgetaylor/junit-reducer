@@ -1,3 +1,4 @@
 dist/
 output/
 junit-reducer
+coverage.out

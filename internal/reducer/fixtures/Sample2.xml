@@ -5,7 +5,7 @@
     </testcase>
     <testcase name="test_should_not_be_able_to_view_a_background_check_without_background_check_viewer_role" lineno="176" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="2" time="2.697016684999994" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
     </testcase>
-    <testcase name="test_should_not_see_Creative_Services_Inc_integration_when_removed" lineno="53" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="1" time="1.1485544199999822" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
+    <testcase name="test_should_not_see_Creative_Services_Inc_integration_when_removed" lineno="53" classname="Admin::Jobs::Applications::Actions::CreativeServicesIncBackgroundCheckTest" assertions="1" time="2.697016684999994" file="test/system/admin/jobs/applications/actions/creative_services_inc_background_check_test.rb">
     </testcase>
   </testsuite>
 </testsuites>
