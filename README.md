@@ -8,6 +8,11 @@
 
 JUnit Reducer is a CLI tool that aggregates multiple sets of [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) into a single, averaged XML report set. This helps you run faster continuous integration (CI) parallel tests by reducing data volume and normalizing test execution times.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./diagram-dark.png">
+  <img alt="Diagram explaining how junit-reducer turns multiple sets of JUnit reports into a single set of JUnit reports." src="./diagram-light.png">
+</picture>
+
 ## Use case
 
 This tool is ideal for situations where you have to handle many JUnit reports, such as those generated in Continuous Integration (CI) systems, and need to distribute tests evenly across different runners based on their execution times. To counteract the fluctuations in time measurements across individual test runs, it's necessary to calculate an average of these times. However, downloading a full set of test reports at runtime can be time-consuming and resource-intensive. This utility addresses this issue by enabling the creation of a consolidated set of reports. These reports represent a 'running average' of test times while still adhering to the required JUnit XML format, facilitating efficient test splitting.
