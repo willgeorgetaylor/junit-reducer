@@ -1,5 +1,5 @@
 [![GitHub CI](https://github.com/willgeorgetaylor/junit-reducer/actions/workflows/test.yml/badge.svg)](https://github.com/willgeorgetaylor/junit-reducer/actions/workflows/test.yml)
-![Coverage](https://img.shields.io/badge/Coverage-74.4%25-brightgreen)
+[![codecov](https://codecov.io/gh/willgeorgetaylor/junit-reducer/graph/badge.svg?token=08001J4XQH)](https://codecov.io/gh/willgeorgetaylor/junit-reducer)
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
 [![GitHub release](https://img.shields.io/github/tag/willgeorgetaylor/junit-reducer.svg?label=release)](https://github.com/willgeorgetaylor/junit-reducer/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/willgeorgetaylor/junit-reducer)](https://goreportcard.com/report/github.com/willgeorgetaylor/junit-reducer)
