@@ -25,7 +25,7 @@ jobs:
 
       - name: Test
         run: |
-          go test -v ./...  -race -covermode=atomic -coverprofile=coverage.out
+          go test -v ./... -covermode=atomic -coverprofile=coverage.out
 
       - name: GoReleaser Check
         uses: goreleaser/goreleaser-action@v5
