@@ -147,59 +147,35 @@ func SuiteAssertionsExtractor(ts serialization.TestSuite) float64 {
 func reduceTestSuiteSlice(testSuiteSlice []serialization.TestSuite, params ReduceFunctionParams) ([]serialization.TestSuite, error) {
 	testSuite := testSuiteSlice[0]
 
-	reducedTime, err := reduceTestSuites(testSuiteSlice, SuiteTimeExtractor, params.OperationTestSuitesTime)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Time = reducedTime
-	}
+	testSuite.Time = reduceTestSuites(testSuiteSlice, SuiteTimeExtractor, params.OperationTestSuitesTime)
 
-	reducedTests, err := reduceTestSuites(testSuiteSlice, SuiteTestsExtractor, params.OperationTestSuitesTests)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Tests = roundToInt(reducedTests, params.RoundingMode)
-	}
+	// Tests count
+	reducedTests := reduceTestSuites(testSuiteSlice, SuiteTestsExtractor, params.OperationTestSuitesTests)
+	testSuite.Tests = roundToInt(reducedTests, params.RoundingMode)
 
-	reducedFailed, err := reduceTestSuites(testSuiteSlice, SuiteFailedExtractor, params.OperationTestSuitesFailed)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Failed = roundToInt(reducedFailed, params.RoundingMode)
-	}
+	// Failed count
+	reducedFailed := reduceTestSuites(testSuiteSlice, SuiteFailedExtractor, params.OperationTestSuitesFailed)
+	testSuite.Failed = roundToInt(reducedFailed, params.RoundingMode)
 
-	reducedErrors, err := reduceTestSuites(testSuiteSlice, SuiteErrorsExtractor, params.OperationTestSuitesErrors)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Errors = roundToInt(reducedErrors, params.RoundingMode)
-	}
+	// Errors count
+	reducedErrors := reduceTestSuites(testSuiteSlice, SuiteErrorsExtractor, params.OperationTestSuitesErrors)
+	testSuite.Errors = roundToInt(reducedErrors, params.RoundingMode)
 
-	reducedSkipped, err := reduceTestSuites(testSuiteSlice, SuiteSkippedExtractor, params.OperationTestSuitesSkipped)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Skipped = roundToInt(reducedSkipped, params.RoundingMode)
-	}
+	// Skipped count
+	reducedSkipped := reduceTestSuites(testSuiteSlice, SuiteSkippedExtractor, params.OperationTestSuitesSkipped)
+	testSuite.Skipped = roundToInt(reducedSkipped, params.RoundingMode)
 
-	reducedAssertions, err := reduceTestSuites(testSuiteSlice, SuiteAssertionsExtractor, params.OperationTestSuitesAssertions)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.Assertions = roundToInt(reducedAssertions, params.RoundingMode)
-	}
+	// Assertions count
+	reducedAssertions := reduceTestSuites(testSuiteSlice, SuiteAssertionsExtractor, params.OperationTestSuitesAssertions)
+	testSuite.Assertions = roundToInt(reducedAssertions, params.RoundingMode)
 
-	reducedTestCases, err := reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperationTestCasesTime)
-	if err != nil {
-		return nil, err
-	} else {
-		testSuite.TestCases = reducedTestCases
-	}
+	// Cases
+	testSuite.TestCases = reduceTestCases(testSuiteSlice, params.ReduceTestCasesBy, params.OperationTestCasesTime)
 
 	return []serialization.TestSuite{testSuite}, nil
 }
 
-func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.TestCaseField, operation enums.AggregateOperation) ([]serialization.TestCase, error) {
+func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.TestCaseField, operation enums.AggregateOperation) []serialization.TestCase {
 	groupedCases := make(map[string][]serialization.TestCase)
 
 	for _, testSuite := range testSuiteSlice {
@@ -213,16 +189,12 @@ func reduceTestCases(testSuiteSlice []serialization.TestSuite, reduceBy enums.Te
 
 	for _, cases := range groupedCases {
 		baseCase := cases[0]
-		reducedTime, err := reduceTestCaseTimes(cases, operation)
-		if err != nil {
-			return nil, err
-		} else {
-			baseCase.Time = reducedTime
-		}
+		reducedTime := reduceTestCaseTimes(cases, operation)
+		baseCase.Time = reducedTime
 		reducedCases = append(reducedCases, baseCase)
 	}
 
-	return reducedCases, nil
+	return reducedCases
 }
 
 func extractKeyFromCase(testCase serialization.TestCase, reduceBy enums.TestCaseField) string {
@@ -235,7 +207,7 @@ func extractKeyFromCase(testCase serialization.TestCase, reduceBy enums.TestCase
 	}
 }
 
-func reduceTestCaseTimes(testCaseSlice []serialization.TestCase, operation enums.AggregateOperation) (float64, error) {
+func reduceTestCaseTimes(testCaseSlice []serialization.TestCase, operation enums.AggregateOperation) float64 {
 	slice := make([]float64, 0, len(testCaseSlice))
 	for _, testCase := range testCaseSlice {
 		slice = append(slice, testCase.Time)
@@ -243,7 +215,7 @@ func reduceTestCaseTimes(testCaseSlice []serialization.TestCase, operation enums
 	return reduce(slice, operation)
 }
 
-func reduceTestSuites(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor, operation enums.AggregateOperation) (float64, error) {
+func reduceTestSuites(testSuiteSlice []serialization.TestSuite, extractor SuiteFieldExtractor, operation enums.AggregateOperation) float64 {
 	slice := make([]float64, 0, len(testSuiteSlice))
 	for _, testSuite := range testSuiteSlice {
 		slice = append(slice, extractor(testSuite))
@@ -251,19 +223,19 @@ func reduceTestSuites(testSuiteSlice []serialization.TestSuite, extractor SuiteF
 	return reduce(slice, operation)
 }
 
-func reduce(slice []float64, operation enums.AggregateOperation) (float64, error) {
+func reduce(slice []float64, operation enums.AggregateOperation) float64 {
 	if operation == enums.AggregateOperationMax {
-		return reduceMax(slice), nil
+		return reduceMax(slice)
 	} else if operation == enums.AggregateOperationMin {
-		return reduceMin(slice), nil
+		return reduceMin(slice)
 	} else if operation == enums.AggregateOperationMode {
-		return reduceMode(slice), nil
+		return reduceMode(slice)
 	} else if operation == enums.AggregateOperationSum {
-		return reduceSum(slice), nil
+		return reduceSum(slice)
 	} else if operation == enums.AggregateOperationMedian {
-		return reduceMedian(slice), nil
+		return reduceMedian(slice)
 	} else {
-		return reduceMean(slice), nil
+		return reduceMean(slice)
 	}
 }
 
