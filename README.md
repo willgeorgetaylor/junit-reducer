@@ -6,7 +6,7 @@
 [![GitHub release](https://img.shields.io/github/tag/willgeorgetaylor/junit-reducer.svg?label=release)](https://github.com/willgeorgetaylor/junit-reducer/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/willgeorgetaylor/junit-reducer)](https://goreportcard.com/report/github.com/willgeorgetaylor/junit-reducer)
 
-JUnit Reducer is a CLI tool that aggregates the [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) from your CI runs and creates a single, averaged report set. This lets you download a smaller set of reports, during CI runs, to inform your test splitting.
+JUnit Reducer is a command-line tool that aggregates the [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) from your CI runs and creates a single, averaged report set. This lets you download a smaller set of reports, during CI runs, to inform your test splitting.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./diagram-dark.png">
