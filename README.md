@@ -96,7 +96,7 @@ For a complete list of arguments:
 $./junit-reducer --help
 ```
 
-```bash
+```
 Flags:
   -h, --help                          help for junit-reducer
       --exclude string                Pattern to exclude from input JUnit XML reports
