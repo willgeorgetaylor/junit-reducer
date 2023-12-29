@@ -20,7 +20,7 @@ Typically, you'll be using `junit-reducer` within a scheduled cron task to reduc
 ### GitHub Actions
 
 > [!TIP]
-> If you're using GitHub Actions, check out the [Action](https://github.com/willgeorgetaylor/reduce-junit-reports) on GitHub Marketplace, if you prefer that sort of thing.
+> If you're using GitHub Actions, check out the [Action](https://github.com/marketplace/actions/reduce-junit-xml-test-reports) on GitHub Marketplace, if you prefer that sort of thing.
 
 ```yaml
 name: junit-test-report-averaging
