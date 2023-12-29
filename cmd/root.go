@@ -55,61 +55,61 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		reduceTestSuitesBy, ok := enums.TestSuiteFieldValues[reduceTestSuitesByString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("reduceTestSuitesBy", reduceTestSuitesByString, enums.GetTestSuiteFields()))
+			fmt.Println(invalidSelectionMessage("reduce-test-suites-by", reduceTestSuitesByString, enums.GetTestSuiteFields()))
 			os.Exit(1)
 		}
 
 		reduceTestCasesBy, ok := enums.TestCaseFieldValues[reduceTestCasesByString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("reduceTestCasesBy", reduceTestCasesByString, enums.GetTestCaseFields()))
+			fmt.Println(invalidSelectionMessage("reduce-test-cases-by", reduceTestCasesByString, enums.GetTestCaseFields()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesSkipped, ok := enums.AggregateOperationValues[operationTestSuitesSkippedString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesSkipped", operationTestSuitesSkippedString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-skipped", operationTestSuitesSkippedString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesFailed, ok := enums.AggregateOperationValues[operationTestSuitesFailedString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesFailed", operationTestSuitesFailedString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-failed", operationTestSuitesFailedString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesErrors, ok := enums.AggregateOperationValues[operationTestSuitesErrorsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesErrors", operationTestSuitesErrorsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-errors", operationTestSuitesErrorsString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesTests, ok := enums.AggregateOperationValues[operationTestSuitesTestsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesTests", operationTestSuitesTestsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-tests", operationTestSuitesTestsString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesAssertions, ok := enums.AggregateOperationValues[operationTestSuitesAssertionsString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesAssertions", operationTestSuitesAssertionsString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-assertions", operationTestSuitesAssertionsString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestSuitesTime, ok := enums.AggregateOperationValues[operationTestSuitesTimeString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestSuitesTime", operationTestSuitesTimeString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-suites-time", operationTestSuitesTimeString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		operationTestCasesTime, ok := enums.AggregateOperationValues[operationTestCasesTimeString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("operationTestCasesTime", operationTestCasesTimeString, enums.GetAggregateOperations()))
+			fmt.Println(invalidSelectionMessage("operation-test-cases-time", operationTestCasesTimeString, enums.GetAggregateOperations()))
 			os.Exit(1)
 		}
 
 		roundingMode, ok := enums.RoundingModeValues[roundingModeString]
 		if !ok {
-			fmt.Println(invalidSelectionMessage("roundingMode", roundingModeString, enums.GetRoundingModes()))
+			fmt.Println(invalidSelectionMessage("rounding-mode", roundingModeString, enums.GetRoundingModes()))
 			os.Exit(1)
 		}
 
