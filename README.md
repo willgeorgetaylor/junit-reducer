@@ -6,7 +6,7 @@
 [![GitHub release](https://img.shields.io/github/tag/willgeorgetaylor/junit-reducer.svg?label=release)](https://github.com/willgeorgetaylor/junit-reducer/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/willgeorgetaylor/junit-reducer)](https://goreportcard.com/report/github.com/willgeorgetaylor/junit-reducer)
 
-JUnit Reducer is a command-line tool that aggregates the [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) from your CI runs and reduces them to a single, lighter set of reports to be downloaded later during CI, to steer your test splitting algorithm (e.g., [split_tests](https://github.com/marketplace/actions/split-tests)). The most typical use case is to regularly update a 'running average' of your recent test reports, which can be downloaded to your test runners in [less time](https://github.com/willgeorgetaylor/junit-reducer?tab=readme-ov-file#faster-ci) and without running an [ongoing race condition risk](https://github.com/willgeorgetaylor/junit-reducer?tab=readme-ov-file#coverage-integrity).
+JUnit Reducer is a command-line tool that aggregates the [JUnit test XML reports](https://www.ibm.com/docs/en/developer-for-zos/14.1?topic=formats-junit-xml-format) from your CI runs and reduces them to a single, lighter set of reports to be downloaded later during CI, to steer your test splitting algorithm (e.g., [split_tests](https://github.com/marketplace/actions/split-tests)). The most typical use case is to regularly update a 'running average' of your recent test reports, which can be downloaded to your test runners in [less time](#faster-ci-) and without running an [ongoing race condition risk](#coverage-integrity-).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./diagram-dark.png">
@@ -80,13 +80,13 @@ In busier projects, CI will be uploading reports frequently, so even if you take
 
 ### Faster CI ✅
 
-You can solve this speed issue with `junit-reducer` by creating a set of reports that looks like the set produced by a single CI run. Importantly, the values for `time` taken by test suite (as well as other counts, like errors and tests) are reduced from the wider set of reports, typically by finding the `mean` of all of the aggregate `time` values. Other reducer operations, like `min` / `max` / `mode` / `median` / `sum`, are available to handle more non-standard distributions.
+You can solve this speed issue with `junit-reducer` by creating a set of reports that looks like the set produced by a single CI run. Importantly, the values for `time` taken by test suite (as well as other counts, like errors and tests) are reduced from the wider set of reports, typically by finding the `mean` of all of the aggregate `time` values. Other reducer operations, like `min` / `max` / `mode` / `median` / `sum`, are available to handle non-standard distributions.
 
 ### Coverage integrity ✅
 
 In very busy projects, there is also a more **problematic race condition possible**, with larger downloads and test runners starting at different times. As CI runs from other commits upload their reports to the same remote source that you're downloading from, if any of your concurrent runners download reports with different values, the input data is misaligned and the splitting operation is corrupted. However, because the download and splitting operation is being performed in a distributed manner (across all of the runners concurrently) this misalignment will result in some tests in your run being **skipped.**
 
-This risk is mitigated by computing the averaged reports in one place, and updating that set as part of a scheduled job. This is exactly the approach outlined in the [quickstart](https://github.com/willgeorgetaylor/junit-reducer?tab=readme-ov-file#quickstart) section.
+This risk is mitigated by computing the averaged reports in one place, and updating that set as part of a scheduled job. This is exactly the approach outlined in the [quickstart](#quickstart) section.
 
 ## Usage
 
