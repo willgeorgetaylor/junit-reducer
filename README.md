@@ -101,19 +101,19 @@ $./junit-reducer --help
 ```
 Flags:
   -h, --help                          help for junit-reducer
-      --exclude string                Pattern to exclude from input JUnit XML reports
-      --include string                Pattern to find input JUnit XML reports (default "./**/*.xml")
-      --op-cases-time string          Operation for test cases time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-assertions string   Operation for test suites assertions. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-errors string       Operation for test suites errors. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-failed string       Operation for test suites failed. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-skipped string      Operation for test suites skipped. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-tests string        Operation for test suites tests. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --op-suites-time string         Operation for test suites time. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
-      --output-path string            Output path for synthetic JUnit XML reports (default "./output/")
-      --reduce-cases-by string        Reduce test cases by name, classname, or file. Options: "classname", "file" or "name" (default "name")
-      --reduce-suites-by string       Reduce test suites by name or filepath or both. Options: "filepath", "name" or "name+filepath" (default "name+filepath")
-      --rounding-mode string          Rounding mode for counts that should be integers. Options: "ceil", "floor" or "round" (default "round")
+      --include string                Glob pattern to find JUnit XML reports to reduce (default "./**/*.xml")
+      --output-path string            Output path for the reduced JUnit XML reports (default "./output/")
+      --exclude string                Glob pattern to omit from included JUnit XML reports
+      --op-cases-time string          Reducer operation for test case time values. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-time string         Reducer operation for test suite time values. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-assertions string   Reducer operation for test suite assertion counts. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-errors string       Reducer operation for test suite error counts. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-failed string       Reducer operation for test suite failure counts. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-skipped string      Reducer operation for test suite skipped counts. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --op-suites-tests string        Reducer operation for test suite test counts. Options: "max", "mean", "median", "min", "mode" or "sum" (default "mean")
+      --reduce-cases-by string        Key to group and reduce test cases by. Options: "classname", "file" or "name" (default "name")
+      --reduce-suites-by string       Key to group and reduce test suites by. Options: "filepath", "name" or "name+filepath" (default "name+filepath")
+      --rounding-mode string          Rounding mode for counts that should be integers in the final result. Options: "ceil", "floor" or "round" (default "round")
 ```
 
 ## Examples
@@ -128,6 +128,8 @@ junit-reducer \
 
 ### Reduce by name
 
+Group test suites and cases by a specific attribute, to deduplicate the reports in the most appropriate way.
+
 ```bash
 junit-reducer \
   --include="test-reports/**/*" \
@@ -136,26 +138,28 @@ junit-reducer \
   --reduce-cases-by="classname"       # Grouping test cases by classname
 ```
 
-### Reduce with non-average operations
+### Reduce with other operations
 
 ```bash
 junit-reducer \
   --include="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --op-suites-skipped="min" \         # Keeps min of skips across suites of same type
-  --op-suites-failed="min" \          # Keeps min of failures across suites of same type
-  --op-suites-errors="min" \          # Keeps min of errors across suites of same type
-  --op-suites-tests="max" \           # Keeps max of tests across suites of same type
-  --op-suites-assertions="max" \      # Keeps max of assertions across suites of same type
-  --op-suites-time="mean" \           # Calculates mean of time across suites of same type
-  --op-cases-time="mean"              # Calculates mean of time across cases of same type
+  --op-suites-skipped="min" \         # Keeps min of skips across suites of same group
+  --op-suites-failed="min" \          # Keeps min of failures across suites of same group
+  --op-suites-errors="min" \          # Keeps min of errors across suites of same group
+  --op-suites-tests="max" \           # Keeps max of tests across suites of same group
+  --op-suites-assertions="max" \      # Keeps max of assertions across suites of same group
+  --op-suites-time="mean" \           # Keeps mean of time across suites of same group
+  --op-cases-time="mean"              # Keeps mean of time across cases of same group
 ```
 
 ### Rounding average counts
 
+You can also specify how to treat counts after they have been reduced.
+
 ```bash
 junit-reducer \
   --include="test-reports/**/*" \
   --output-path="avg-reports/" \
-  --rounding-mode="floor"             # Specifies the rounding method
+  --rounding-mode="floor"             # Specifies the rounding method for counts
 ```
