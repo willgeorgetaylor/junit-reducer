@@ -57,7 +57,7 @@ jobs:
           curl -L "https://github.com/willgeorgetaylor/junit-reducer/releases/latest/download/junit-reducer_Linux_x86_64.tar.gz" | tar -xzf -
           chmod +x junit-reducer
           ./junit-reducer \
-            --include="./reports/**/*" \
+            --include="./reports/**/*.xml" \
             --output-path="./average-reports/"
 
       # Upload the reduced set of test reports to a dedicated bucket/path.
@@ -122,7 +122,7 @@ Flags:
 
 ```bash
 junit-reducer \
-  --include="test-reports/**/*" \     # Input path for JUnit reports
+  --include="test-reports/**/*.xml" \     # Input path for JUnit reports
   --output-path="avg-reports/"        # Output path for averaged reports
 ```
 
@@ -132,7 +132,7 @@ Group test suites and cases by a specific attribute, to deduplicate the reports 
 
 ```bash
 junit-reducer \
-  --include="test-reports/**/*" \
+  --include="test-reports/**/*.xml" \
   --output-path="avg-reports/" \
   --reduce-suites-by="name" \         # Grouping test suites by name
   --reduce-cases-by="classname"       # Grouping test cases by classname
@@ -142,7 +142,7 @@ junit-reducer \
 
 ```bash
 junit-reducer \
-  --include="test-reports/**/*" \
+  --include="test-reports/**/*.xml" \
   --output-path="avg-reports/" \
   --op-suites-skipped="min" \         # Keeps min of skips across suites of same group
   --op-suites-failed="min" \          # Keeps min of failures across suites of same group
@@ -159,7 +159,7 @@ You can also specify how to treat counts after they have been reduced.
 
 ```bash
 junit-reducer \
-  --include="test-reports/**/*" \
+  --include="test-reports/**/*.xml" \
   --output-path="avg-reports/" \
   --rounding-mode="floor"             # Specifies the rounding method for counts
 ```
